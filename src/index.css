@@ -1,48 +1,235 @@
 @import "tailwindcss";
 
+/*
+ * Gemini-inspired theme.
+ *
+ * Components keep using Tailwind's slate / amber / sky / emerald / rose / violet
+ * utilities; this file re-points those palettes at Gemini's neutral greys and
+ * Google's brand hues, and flips them for light mode via [data-theme="light"].
+ * `accent` is the interactive colour (buttons, active states, focus rings).
+ */
+@theme {
+  --font-sans: "Google Sans Flex", "Google Sans", "Inter", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Google Sans Code", "JetBrains Mono", "Fira Code", Consolas, monospace;
+
+  /* Neutrals (dark default) */
+  --color-white: #f1f3f4;
+  --color-slate-100: #f1f3f4;
+  --color-slate-200: #e3e3e3;
+  --color-slate-300: #c4c7c5;
+  --color-slate-400: #9aa0a6;
+  --color-slate-500: #80868b;
+  --color-slate-600: #5f6368;
+  --color-slate-700: #3c4043;
+  --color-slate-800: #2a2b2e;
+  --color-slate-900: #1e1f20;
+  --color-slate-950: #131314;
+
+  /* Interactive accent */
+  --color-accent: #a8c7fa;
+  --color-accent-hover: #c2d7fb;
+  --color-accent-strong: #4285f4;
+
+  /* Google hues, dark-mode tuned */
+  --color-sky-200: #d3e3fd;
+  --color-sky-300: #a8c7fa;
+  --color-sky-400: #7cacf8;
+  --color-sky-500: #4285f4;
+
+  --color-emerald-100: #e6f4ea;
+  --color-emerald-200: #c4eed0;
+  --color-emerald-300: #6dd58c;
+  --color-emerald-400: #37be5f;
+  --color-emerald-500: #1e8e3e;
+
+  --color-rose-100: #fce8e6;
+  --color-rose-200: #f9dedc;
+  --color-rose-300: #f2b8b5;
+  --color-rose-400: #f28b82;
+  --color-rose-500: #ea4335;
+
+  --color-amber-200: #feefc3;
+  --color-amber-300: #fdd663;
+  --color-amber-400: #fbbc04;
+  --color-amber-500: #f9ab00;
+
+  --color-violet-200: #e9d2fd;
+  --color-violet-300: #d7aefb;
+  --color-violet-400: #c58af9;
+  --color-violet-500: #a142f4;
+
+  --color-teal-400: #4ecde6;
+
+  --animate-gemini-spin: gemini-spin 8s linear infinite;
+  --animate-rise: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-white: #1f1f1f;
+  --color-slate-100: #1f1f1f;
+  --color-slate-200: #2d2e30;
+  --color-slate-300: #444746;
+  --color-slate-400: #5e6063;
+  --color-slate-500: #747775;
+  --color-slate-600: #9aa0a6;
+  --color-slate-700: #c4c7c5;
+  --color-slate-800: #dde3ea;
+  --color-slate-900: #eef2f8;
+  --color-slate-950: #ffffff;
+
+  --color-accent: #0b57d0;
+  --color-accent-hover: #0842a0;
+  --color-accent-strong: #0b57d0;
+
+  --color-sky-200: #0842a0;
+  --color-sky-300: #0b57d0;
+  --color-sky-400: #1a73e8;
+  --color-sky-500: #4285f4;
+
+  --color-emerald-100: #0d652d;
+  --color-emerald-200: #0d652d;
+  --color-emerald-300: #137333;
+  --color-emerald-400: #188038;
+  --color-emerald-500: #1e8e3e;
+
+  --color-rose-100: #8c1d18;
+  --color-rose-200: #a50e0e;
+  --color-rose-300: #b3261e;
+  --color-rose-400: #d93025;
+  --color-rose-500: #ea4335;
+
+  --color-amber-200: #7a4100;
+  --color-amber-300: #8f4f00;
+  --color-amber-400: #b06000;
+  --color-amber-500: #f9ab00;
+
+  --color-violet-200: #5b1e9c;
+  --color-violet-300: #7438c2;
+  --color-violet-400: #8e4fd8;
+  --color-violet-500: #a142f4;
+
+  --color-teal-400: #12a4af;
+}
+
+:root {
+  color-scheme: dark;
+  --gemini-gradient: linear-gradient(74deg, #4285f4 0%, #9b72cb 45%, #d96570 100%);
+}
+
 @layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    @apply bg-slate-950 font-sans text-slate-100 antialiased;
+    font-feature-settings: "ss01", "cv11";
   }
 
-  code, pre, .font-mono {
-    font-family: "JetBrains Mono", "Fira Code", Consolas, Monaco, monospace;
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 30%, transparent);
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  select:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  select:disabled {
+    @apply cursor-not-allowed opacity-50;
   }
 }
 
-/* Custom sleek scrollbars */
+/* Gemini signature gradient helpers */
+@utility gemini-text {
+  background: var(--gemini-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility gemini-bg {
+  background: var(--gemini-gradient);
+}
+
+/* 1px gradient outline that follows border-radius */
+@utility gemini-ring {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: var(--gemini-gradient);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@keyframes gemini-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
-
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: rgba(71, 85, 105, 0.7);
+  background: var(--color-slate-700);
+  border: 3px solid var(--color-slate-950);
   border-radius: 9999px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.9);
+  background: var(--color-slate-600);
 }
 
-/* 3D Card Flip utilities */
+/* 3D card flip utilities (kept for flashcards) */
 .perspective-1000 {
   perspective: 1000px;
 }
-
 .transform-style-3d {
   transform-style: preserve-3d;
 }
-
 .backface-hidden {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
-
 .rotate-y-180 {
   transform: rotateY(180deg);
 }

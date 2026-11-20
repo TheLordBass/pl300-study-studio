@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useId } from 'react';
 import {
-  AlertTriangle,
   ArrowRight,
-  Award,
   BarChart3,
   BookOpen,
   Boxes,
@@ -12,18 +10,13 @@ import {
   FileSpreadsheet,
   Flame,
   Layers,
+  Lightbulb,
   RotateCcw,
   ShieldCheck,
-  Sparkles,
   Target,
   Youtube,
 } from 'lucide-react';
-import {
-  DomainId,
-  MainTab,
-  SimulatorSubTab,
-  UserProgress,
-} from '../types/pl300';
+import { DomainId, MainTab, SimulatorSubTab, UserProgress } from '../types/pl300';
 import { PL300_DOMAINS, VIDEO_RESOURCES } from '../data/curriculumData';
 import {
   CASE_STUDIES,
@@ -32,11 +25,9 @@ import {
   POWER_QUERY_CHALLENGES,
 } from '../data/examQuestionsData';
 import { FLASHCARDS } from '../data/matrixAndFlashcardsData';
-import {
-  computeDomainAnalytics,
-  computeReadinessScore,
-} from '../utils/progressHelpers';
+import { computeDomainAnalytics, computeReadinessScore } from '../utils/progressHelpers';
 import { ProgressSyncCard } from './ProgressSyncCard';
+import { Sparkle } from './ui/Sparkle';
 
 interface DashboardViewProps {
   progress: UserProgress;
@@ -45,38 +36,69 @@ interface DashboardViewProps {
   onResetProgress: () => void;
 }
 
-const DOMAIN_ICONS = {
-  Database,
-  Boxes,
-  BarChart3,
-  ShieldCheck,
+const DOMAIN_ICONS = { Database, Boxes, BarChart3, ShieldCheck };
+
+const DOMAIN_TINT: Record<string, { icon: string; chip: string }> = {
+  amber: { icon: 'text-amber-300 bg-amber-500/15', chip: 'text-amber-300' },
+  sky: { icon: 'text-sky-300 bg-sky-500/15', chip: 'text-sky-300' },
+  emerald: { icon: 'text-emerald-300 bg-emerald-500/15', chip: 'text-emerald-300' },
+  violet: { icon: 'text-violet-300 bg-violet-500/15', chip: 'text-violet-300' },
 };
 
-const COLOR_STYLES: Record<string, { badge: string; bar: string; border: string; icon: string }> = {
-  amber: {
-    badge: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-    bar: 'bg-amber-400',
-    border: 'border-amber-500/25 hover:border-amber-400/50',
-    icon: 'text-amber-400',
-  },
-  sky: {
-    badge: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
-    bar: 'bg-sky-400',
-    border: 'border-sky-500/25 hover:border-sky-400/50',
-    icon: 'text-sky-400',
-  },
-  emerald: {
-    badge: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-    bar: 'bg-emerald-400',
-    border: 'border-emerald-500/25 hover:border-emerald-400/50',
-    icon: 'text-emerald-400',
-  },
-  violet: {
-    badge: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
-    bar: 'bg-violet-400',
-    border: 'border-violet-500/25 hover:border-violet-400/50',
-    icon: 'text-violet-400',
-  },
+function greeting(): string {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
+/** Circular readiness gauge with the Gemini gradient and a 700 pass tick. */
+const ReadinessRing: React.FC<{ score: number }> = ({ score }) => {
+  const id = useId();
+  const r = 70;
+  const c = 2 * Math.PI * r;
+  const pct = Math.min(1, Math.max(0, score / 1000));
+  const passAngle = 0.7 * 2 * Math.PI - Math.PI / 2;
+  return (
+    <div className="relative h-44 w-44 shrink-0">
+      <svg viewBox="0 0 160 160" className="h-full w-full -rotate-90">
+        <defs>
+          <linearGradient id={id} x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stopColor="#4285f4" />
+            <stop offset="0.5" stopColor="#9b72cb" />
+            <stop offset="1" stopColor="#d96570" />
+          </linearGradient>
+        </defs>
+        <circle cx="80" cy="80" r={r} fill="none" strokeWidth="12" className="stroke-slate-800" />
+        <circle
+          cx="80"
+          cy="80"
+          r={r}
+          fill="none"
+          strokeWidth="12"
+          strokeLinecap="round"
+          stroke={`url(#${id})`}
+          strokeDasharray={c}
+          strokeDashoffset={c * (1 - pct)}
+          style={{ transition: 'stroke-dashoffset 900ms cubic-bezier(.2,.7,.2,1)' }}
+        />
+      </svg>
+      {/* 700 pass marker */}
+      <span
+        className="absolute h-3.5 w-1 rounded-full bg-slate-100"
+        style={{
+          left: `calc(50% + ${Math.cos(passAngle) * 43.75}% - 2px)`,
+          top: `calc(50% + ${Math.sin(passAngle) * 43.75}% - 7px)`,
+          transform: `rotate(${(passAngle * 180) / Math.PI + 90}deg)`,
+        }}
+        title="700 — passing score"
+      />
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-4xl font-semibold tracking-tight text-white">{score}</span>
+        <span className="text-xs text-slate-400">of 1000</span>
+      </div>
+    </div>
+  );
 };
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -87,357 +109,256 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 }) => {
   const analytics = computeDomainAnalytics(progress);
   const readinessScore = computeReadinessScore(analytics, progress);
-  const passingScore = 700;
-  const isPassing = readinessScore >= passingScore;
+  const isPassing = readinessScore >= 700;
 
-  // Determine weakest domain for smart recommendation
-  const sortedDomains = [...PL300_DOMAINS].sort(
+  const weakestDomain = [...PL300_DOMAINS].sort(
     (a, b) => analytics[a.id].masteryPct - analytics[b.id].masteryPct
-  );
-  const weakestDomain = sortedDomains[0];
+  )[0];
 
   const totalSkills = Object.values(analytics).reduce((acc, d) => acc + d.skillsTotal, 0);
   const doneSkills = Object.values(analytics).reduce((acc, d) => acc + d.skillsDone, 0);
   const totalMcqCorrect = Object.values(analytics).reduce((acc, d) => acc + d.mcqCorrect, 0);
-  const totalCards = FLASHCARDS.length + progress.customFlashcards.length;
-  const masteredCards = Object.values(progress.flashcardRatings).filter((r) => r.box >= 3).length;
+  const allCards = [...FLASHCARDS, ...progress.customFlashcards];
+  // Count only cards that still exist (ratings of deleted custom cards used to inflate this).
+  const masteredCards = allCards.filter(
+    (c) => (progress.flashcardRatings[c.id]?.box ?? 0) >= 3
+  ).length;
 
   const caseStudyTotal = CASE_STUDIES.reduce((acc, cs) => acc + cs.questions.length, 0);
   const caseStudyEarned = Object.values(progress.caseStudyScores).reduce((acc, v) => acc + v, 0);
+  const labsDone = progress.daxCompleted.length + progress.pqCompleted.length;
+  const labsTotal = DAX_CHALLENGES.length + POWER_QUERY_CHALLENGES.length;
+
+  const stats = [
+    { label: 'Skills', value: doneSkills, total: totalSkills },
+    { label: 'MCQs right', value: totalMcqCorrect, total: MCQ_QUESTIONS.length },
+    { label: 'DAX / PQ labs', value: labsDone, total: labsTotal },
+    { label: 'Cards mastered', value: masteredCards, total: allCards.length },
+  ];
+
+  const suggestions: {
+    title: string;
+    detail: string;
+    meta: string;
+    icon: React.ComponentType<{ className?: string }>;
+    onClick: () => void;
+  }[] = [
+    {
+      title: 'Build DAX formulas slot by slot',
+      detail: 'CALCULATE, USERELATIONSHIP, KEEPFILTERS, SUMX & RANKX.',
+      meta: `${progress.daxCompleted.length}/${DAX_CHALLENGES.length} done`,
+      icon: Code2,
+      onClick: () => onNavigateTab('simulator', 'dax'),
+    },
+    {
+      title: 'Order Power Query steps',
+      detail: 'Unpivot, shape star dimensions and keep query folding.',
+      meta: `${progress.pqCompleted.length}/${POWER_QUERY_CHALLENGES.length} done`,
+      icon: FileSpreadsheet,
+      onClick: () => onNavigateTab('simulator', 'powerquery'),
+    },
+    {
+      title: 'Work through a case study',
+      detail: 'Multi-tab exhibits with evidence highlighting.',
+      meta: `${caseStudyEarned}/${caseStudyTotal} pts`,
+      icon: Layers,
+      onClick: () => onNavigateTab('simulator', 'casestudy'),
+    },
+    {
+      title: 'Rapid-fire matrix drills',
+      detail: 'Workspace roles, storage modes, RLS/OLS, visual picks.',
+      meta: `Best streak ${progress.matrixStats.bestStreak}`,
+      icon: Flame,
+      onClick: () => onNavigateTab('matrix'),
+    },
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Top Hero Readiness Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-6 shadow-xl">
-        <div className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-amber-400/10 blur-3xl" />
-        <div className="grid gap-6 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-7 space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-medium text-amber-300">
-              <Award className="h-3.5 w-3.5" />
-              Microsoft Certified: Power BI Data Analyst Associate (PL-300)
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Your Exam Readiness & Weak-Spot Radar
-            </h1>
-            <p className="max-w-2xl text-sm leading-relaxed text-slate-300">
-              Built around the official Microsoft Learn syllabus, curated YouTube deep-dives (Guy in a Cube, Pragmatic Works, SQLBI, Curbal), and authentic interactive PL-300 exam formats: DAX slot builders, Power Query folding sequencers, and multi-tab case studies.
-            </p>
-            <div className="flex flex-wrap gap-2.5 pt-1">
-              <button
-                onClick={() => onNavigateTab('simulator', 'mcq', 'all')}
-                className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-amber-300"
-              >
-                <Target className="h-4 w-4" />
-                Launch Exam Simulator
-                <ArrowRight className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => onNavigateTab('curriculum')}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:border-slate-600 hover:bg-slate-800"
-              >
-                <BookOpen className="h-4 w-4 text-sky-400" />
-                MS Learn & Video Hub
-              </button>
-              <button
-                onClick={() => {
-                  if (window.confirm('Reset all PL-300 study progress, notes, and custom flashcards?')) {
-                    onResetProgress();
-                  }
-                }}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2.5 text-xs font-medium text-slate-400 transition hover:border-rose-500/40 hover:text-rose-300"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                Reset Progress
-              </button>
-            </div>
-          </div>
+    <div className="space-y-10">
+      {/* ===== Greeting ===== */}
+      <section className="pt-4 sm:pt-8">
+        <h2 className="text-4xl font-medium tracking-tight sm:text-5xl">
+          <span className="gemini-text">{greeting()}, Analyst</span>
+        </h2>
+        <p className="mt-2 text-2xl font-normal tracking-tight text-slate-500 sm:text-4xl">
+          Where should we focus today?
+        </p>
+      </section>
 
-          {/* Score Gauge Card */}
-          <div className="lg:col-span-5 rounded-xl border border-slate-800 bg-slate-950/80 p-5">
-            <div className="flex items-baseline justify-between">
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
-                  Simulated Exam Score
-                </p>
-                <div className="mt-1 flex items-baseline gap-2">
-                  <span className={`text-4xl font-extrabold ${isPassing ? 'text-emerald-400' : 'text-amber-400'}`}>
-                    {readinessScore}
-                  </span>
-                  <span className="text-sm text-slate-400">/ 1000</span>
-                </div>
-              </div>
-              <span
-                className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${
-                  isPassing
-                    ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300'
-                    : 'border-amber-500/40 bg-amber-500/15 text-amber-300'
-                }`}
-              >
-                {isPassing ? 'Passing Pace (≥ 700)' : 'Target: 700+ to Pass'}
-              </span>
-            </div>
-
-            {/* Meter with 700 marker */}
-            <div className="mt-4">
-              <div className="relative h-3 w-full overflow-hidden rounded-full bg-slate-800">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
+      {/* ===== Readiness + recommendation ===== */}
+      <section className="grid gap-4 lg:grid-cols-5">
+        <div className="flex flex-col items-center gap-6 rounded-[28px] bg-slate-900 p-6 sm:flex-row lg:col-span-3 lg:flex-col xl:flex-row">
+          <ReadinessRing score={readinessScore} />
+          <div className="w-full flex-1 space-y-4">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-lg font-medium text-white">Simulated exam score</h3>
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
                     isPassing
-                      ? 'bg-gradient-to-r from-emerald-500 to-teal-400'
-                      : 'bg-gradient-to-r from-amber-500 to-yellow-400'
+                      ? 'bg-emerald-500/15 text-emerald-300'
+                      : 'bg-slate-800 text-slate-300'
                   }`}
-                  style={{ width: `${Math.min(100, readinessScore / 10)}%` }}
-                />
-                <div
-                  className="absolute bottom-0 top-0 w-0.5 bg-white/90 shadow"
-                  style={{ left: '70%' }}
-                  title="700 Passing Score"
-                />
+                >
+                  {isPassing ? 'On passing pace' : `${700 - readinessScore} to pass`}
+                </span>
               </div>
-              <div className="mt-1.5 flex justify-between text-[11px] text-slate-400">
-                <span>0</span>
-                <span className="font-semibold text-slate-200">Pass Line: 700</span>
-                <span>1000</span>
-              </div>
+              <p className="mt-1 text-sm text-slate-400">
+                Microsoft needs 700 / 1000. Your score blends skills, quiz accuracy, labs,
+                case studies and drills, weighted by the official domain split.
+              </p>
             </div>
-
-            {/* Quick Stat Pills */}
-            <div className="mt-4 grid grid-cols-4 gap-2 text-center">
-              <div className="rounded-lg bg-slate-900 p-2">
-                <div className="text-sm font-bold text-white">{doneSkills}/{totalSkills}</div>
-                <div className="text-[10px] text-slate-400">Skills</div>
-              </div>
-              <div className="rounded-lg bg-slate-900 p-2">
-                <div className="text-sm font-bold text-white">{totalMcqCorrect}/{MCQ_QUESTIONS.length}</div>
-                <div className="text-[10px] text-slate-400">MCQs</div>
-              </div>
-              <div className="rounded-lg bg-slate-900 p-2">
-                <div className="text-sm font-bold text-white">
-                  {progress.daxCompleted.length + progress.pqCompleted.length}/
-                  {DAX_CHALLENGES.length + POWER_QUERY_CHALLENGES.length}
+            <dl className="grid grid-cols-2 gap-2 2xl:grid-cols-4">
+              {stats.map((s) => (
+                <div key={s.label} className="rounded-2xl bg-slate-950/60 px-3 py-2.5">
+                  <dt className="text-[11px] text-slate-400">{s.label}</dt>
+                  <dd className="mt-0.5 text-base font-semibold text-white">
+                    {s.value}
+                    <span className="text-xs font-normal text-slate-500">/{s.total}</span>
+                  </dd>
                 </div>
-                <div className="text-[10px] text-slate-400">DAX/PQ Labs</div>
-              </div>
-              <div className="rounded-lg bg-slate-900 p-2">
-                <div className="text-sm font-bold text-white">{masteredCards}/{totalCards}</div>
-                <div className="text-[10px] text-slate-400">Cards</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Weak-Spot Recommender + Interactive Mode Shortcuts */}
-      <div className="grid gap-4 lg:grid-cols-12">
-        <div className="lg:col-span-5 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-amber-400/15 p-2.5 text-amber-300">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div className="space-y-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-300">
-                Recommended Next Step
-              </h2>
-              <p className="text-base font-semibold text-white">
-                Focus on: {weakestDomain.title} ({weakestDomain.weightRange} exam weight)
-              </p>
-              <p className="text-xs leading-relaxed text-slate-300">
-                Current mastery in <span className="font-semibold text-white">{weakestDomain.shortTitle}</span> is{' '}
-                <span className="font-semibold text-amber-300">{analytics[weakestDomain.id].masteryPct}%</span>.
-                Tackle the targeted MCQs or check off its Microsoft Learn sub-skills to lift your score fastest.
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <button
-                  onClick={() => onNavigateTab('simulator', 'mcq', weakestDomain.id)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-amber-400/20 px-3 py-1.5 text-xs font-semibold text-amber-200 transition hover:bg-amber-400/30"
-                >
-                  Practice {weakestDomain.shortTitle} MCQs
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-                <button
-                  onClick={() => onNavigateTab('curriculum', undefined, weakestDomain.id)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:border-slate-500"
-                >
-                  Open Study Modules
-                </button>
-              </div>
-            </div>
+              ))}
+            </dl>
           </div>
         </div>
 
-        {/* 4 Interactive Lab Launchers */}
-        <div className="lg:col-span-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <button
-            onClick={() => onNavigateTab('simulator', 'dax')}
-            className="group flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-left transition hover:border-sky-500/50 hover:bg-slate-900"
-          >
-            <div className="rounded-xl bg-sky-500/15 p-2.5 text-sky-400">
-              <Code2 className="h-5 w-5" />
+        <div className="gemini-ring flex flex-col justify-between gap-5 rounded-[28px] bg-slate-900 p-6 lg:col-span-2">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-300">
+              <Sparkle className="h-4 w-4" />
+              Recommended next step
             </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-white group-hover:text-sky-300">
-                  DAX Slot Builder
-                </span>
-                <span className="text-xs font-medium text-slate-400">
-                  {progress.daxCompleted.length}/{DAX_CHALLENGES.length}
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-slate-400">
-                Practice CALCULATE, USERELATIONSHIP, KEEPFILTERS, SUMX & RANKX slot-fill questions.
-              </p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => onNavigateTab('simulator', 'powerquery')}
-            className="group flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-left transition hover:border-amber-500/50 hover:bg-slate-900"
-          >
-            <div className="rounded-xl bg-amber-500/15 p-2.5 text-amber-400">
-              <FileSpreadsheet className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-white group-hover:text-amber-300">
-                  Power Query Sequencer
-                </span>
-                <span className="text-xs font-medium text-slate-400">
-                  {progress.pqCompleted.length}/{POWER_QUERY_CHALLENGES.length}
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-slate-400">
-                Order transformation steps cleanly to unpivot, build star dimensions, and keep Query Folding.
-              </p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => onNavigateTab('simulator', 'casestudy')}
-            className="group flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-left transition hover:border-emerald-500/50 hover:bg-slate-900"
-          >
-            <div className="rounded-xl bg-emerald-500/15 p-2.5 text-emerald-400">
-              <Layers className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-white group-hover:text-emerald-300">
-                  Case Study Simulator
-                </span>
-                <span className="text-xs font-medium text-slate-400">
-                  {caseStudyEarned}/{caseStudyTotal} pts
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-slate-400">
-                Multi-tab Contoso & Litware exhibits with evidence-highlighting exam strategy.
-              </p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => onNavigateTab('matrix')}
-            className="group flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-left transition hover:border-violet-500/50 hover:bg-slate-900"
-          >
-            <div className="rounded-xl bg-violet-500/15 p-2.5 text-violet-400">
-              <Flame className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-white group-hover:text-violet-300">
-                  Matrix Drills & Cheat Sheets
-                </span>
-                <span className="text-xs font-medium text-slate-400">
-                  Streak: {progress.matrixStats.bestStreak}
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-slate-400">
-                Rapid-fire drills on Workspace Roles, Storage Modes, RLS/OLS & Visual Picks.
-              </p>
-            </div>
-          </button>
+            <p className="text-xl font-medium leading-snug text-white">
+              Strengthen {weakestDomain.shortTitle}
+            </p>
+            <p className="text-sm leading-relaxed text-slate-400">
+              It&apos;s your weakest domain at{' '}
+              <span className="font-medium text-white">
+                {analytics[weakestDomain.id].masteryPct}% mastery
+              </span>{' '}
+              and carries {weakestDomain.weightRange} of the exam. Targeted questions lift
+              your score fastest.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => onNavigateTab('simulator', 'mcq', weakestDomain.id)}
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-slate-950 transition hover:bg-accent-hover"
+            >
+              Practice questions
+              <ArrowRight className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => onNavigateTab('curriculum', undefined, weakestDomain.id)}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-5 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
+            >
+              <BookOpen className="h-4 w-4" />
+              Study modules
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* 4 Official Exam Domains Mastery Grid */}
-      <div>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Official PL-300 Domain Breakdown</h2>
-          <span className="text-xs text-slate-400">
-            Weighted according to Microsoft Skills Measured
-          </span>
+      {/* ===== Suggestion cards ===== */}
+      <section>
+        <h3 className="mb-3 text-sm font-medium text-slate-400">Jump into a lab</h3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {suggestions.map((s) => {
+            const Icon = s.icon;
+            return (
+              <button
+                key={s.title}
+                onClick={s.onClick}
+                className="group flex min-h-[176px] flex-col justify-between rounded-[24px] bg-slate-900 p-5 text-left transition hover:bg-slate-800"
+              >
+                <div>
+                  <div className="text-base font-medium leading-snug text-white">{s.title}</div>
+                  <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{s.detail}</p>
+                </div>
+                <div className="mt-4 flex items-end justify-between">
+                  <span className="text-xs font-medium text-slate-500">{s.meta}</span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-slate-200 transition group-hover:bg-accent group-hover:text-slate-950">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                </div>
+              </button>
+            );
+          })}
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
+      </section>
+
+      {/* ===== Domain breakdown ===== */}
+      <section>
+        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="text-sm font-medium text-slate-400">Exam domains</h3>
+          <span className="text-xs text-slate-500">Weighted per Microsoft&apos;s skills measured</span>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2">
           {PL300_DOMAINS.map((domain) => {
             const Icon = DOMAIN_ICONS[domain.iconName];
-            const stats = analytics[domain.id];
-            const style = COLOR_STYLES[domain.color];
+            const st = analytics[domain.id];
+            const tint = DOMAIN_TINT[domain.color] ?? DOMAIN_TINT.sky;
             const videosInDomain = VIDEO_RESOURCES.filter((v) => v.domain === domain.id);
             const watchedInDomain = videosInDomain.filter((v) =>
               progress.watchedVideos.includes(v.id)
             ).length;
 
             return (
-              <div
-                key={domain.id}
-                className={`rounded-2xl border bg-slate-900/60 p-5 transition ${style.border}`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-xl bg-slate-800/90 p-2.5">
-                      <Icon className={`h-5 w-5 ${style.icon}`} />
-                    </div>
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-semibold text-white">{domain.title}</h3>
-                        <span className={`rounded-full border px-2 py-0.5 text-[11px] font-medium ${style.badge}`}>
-                          Exam Weight: {domain.weightRange}
-                        </span>
+              <div key={domain.id} className="rounded-[24px] bg-slate-900 p-5">
+                <div className="flex items-start gap-4">
+                  <div className={`rounded-2xl p-3 ${tint.icon}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h4 className="font-medium text-white">{domain.title}</h4>
+                        <span className={`text-xs ${tint.chip}`}>{domain.weightRange} of exam</span>
                       </div>
-                      <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                        {domain.description}
-                      </p>
+                      <div className="text-right">
+                        <div className="text-2xl font-semibold leading-none text-white">
+                          {st.masteryPct}
+                          <span className="text-sm font-normal text-slate-500">%</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xl font-bold text-white">{stats.masteryPct}%</span>
-                    <div className="text-[10px] uppercase tracking-wide text-slate-400">Mastery</div>
+                    <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
+                      <div
+                        className="h-full rounded-full gemini-bg transition-all duration-700"
+                        style={{ width: `${st.masteryPct}%` }}
+                      />
+                    </div>
+                    <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-slate-400">
+                      {domain.description}
+                    </p>
                   </div>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-slate-800">
-                  <div
-                    className={`h-full rounded-full transition-all duration-500 ${style.bar}`}
-                    style={{ width: `${stats.masteryPct}%` }}
-                  />
-                </div>
-
-                {/* Metrics & Quick Actions */}
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="inline-flex items-center gap-1">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-                      {stats.skillsDone}/{stats.skillsTotal} Skills
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <span className="inline-flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" />
+                      {st.skillsDone}/{st.skillsTotal} skills
                     </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Target className="h-3.5 w-3.5 text-sky-400" />
-                      {stats.mcqCorrect}/{stats.mcqTotal} MCQs
+                    <span className="inline-flex items-center gap-1.5">
+                      <Target className="h-3.5 w-3.5 text-sky-300" />
+                      {st.mcqCorrect}/{st.mcqTotal} MCQs
                     </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Youtube className="h-3.5 w-3.5 text-rose-400" />
-                      {watchedInDomain}/{videosInDomain.length} Videos
+                    <span className="inline-flex items-center gap-1.5">
+                      <Youtube className="h-3.5 w-3.5 text-rose-300" />
+                      {watchedInDomain}/{videosInDomain.length} videos
                     </span>
                   </div>
-
-                  <div className="flex gap-2">
+                  <div className="flex gap-1.5">
                     <button
                       onClick={() => onNavigateTab('curriculum', undefined, domain.id)}
-                      className="rounded-lg border border-slate-700 px-2.5 py-1 text-xs font-medium text-slate-200 transition hover:bg-slate-800"
+                      className="rounded-full px-3 py-1.5 font-medium text-slate-200 transition hover:bg-slate-800"
                     >
                       Study
                     </button>
                     <button
                       onClick={() => onNavigateTab('simulator', 'mcq', domain.id)}
-                      className="rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-amber-300 transition hover:bg-slate-700"
+                      className="rounded-full bg-accent/15 px-3 py-1.5 font-medium text-accent transition hover:bg-accent/25"
                     >
                       Quiz
                     </button>
@@ -447,21 +368,34 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             );
           })}
         </div>
-      </div>
+      </section>
 
-      {/* Cross-Device Backup & Cloud Sync */}
-      <ProgressSyncCard
-        progress={progress}
-        onImportProgress={onImportProgress}
-      />
+      {/* ===== Sync ===== */}
+      <ProgressSyncCard progress={progress} onImportProgress={onImportProgress} />
 
-      {/* High-Yield Exam Strategy Tip */}
-      <div className="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-xs text-slate-300">
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
-        <div>
-          <span className="font-semibold text-white">PL-300 Exam Day Strategy:</span> On multi-part Case Studies, read the <span className="text-amber-300 font-medium">questions first</span> before scanning the 5 Exhibit tabs—this cuts reading time in half. Also remember you cannot go back to previous Case Study sections once submitted, though you can mark normal questions for review.
+      {/* ===== Exam-day tip + reset ===== */}
+      <section className="flex flex-col gap-4 rounded-[24px] bg-slate-900 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3 text-sm text-slate-300">
+          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
+          <p className="leading-relaxed">
+            <span className="font-medium text-white">Exam-day strategy: </span>
+            in case studies, read the questions before the exhibit tabs — it roughly halves
+            reading time. You can&apos;t return to a case study once you submit it, but you can
+            flag regular questions for review.
+          </p>
         </div>
-      </div>
+        <button
+          onClick={() => {
+            if (window.confirm('Reset all PL-300 study progress, notes, and custom flashcards?')) {
+              onResetProgress();
+            }
+          }}
+          className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full px-3 py-2 text-xs font-medium text-slate-400 transition hover:bg-rose-500/10 hover:text-rose-300 sm:self-auto"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+          Reset progress
+        </button>
+      </section>
     </div>
   );
 };

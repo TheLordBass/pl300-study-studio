@@ -4,8 +4,9 @@ import {
   MCQQuestion,
   PowerQueryChallenge,
 } from '../types/pl300';
+import { shuffle, shuffleAwayFrom, shuffleOptions } from '../utils/shuffle';
 
-export const MCQ_QUESTIONS: MCQQuestion[] = [
+const RAW_MCQ_QUESTIONS: MCQQuestion[] = [
   // PREPARE (5)
   {
     id: 'mcq-p1',
@@ -415,7 +416,7 @@ export const MCQ_QUESTIONS: MCQQuestion[] = [
   },
 ];
 
-export const DAX_CHALLENGES: DaxChallenge[] = [
+const RAW_DAX_CHALLENGES: DaxChallenge[] = [
   {
     id: 'dax-1',
     title: 'Year-to-Date (YTD) Sales',
@@ -580,7 +581,7 @@ export const DAX_CHALLENGES: DaxChallenge[] = [
   },
 ];
 
-export const POWER_QUERY_CHALLENGES: PowerQueryChallenge[] = [
+const RAW_POWER_QUERY_CHALLENGES: PowerQueryChallenge[] = [
   {
     id: 'pq-1',
     title: 'Unpivot Wide Monthly Budget into Star Schema Fact Table',
@@ -877,7 +878,7 @@ export const POWER_QUERY_CHALLENGES: PowerQueryChallenge[] = [
   },
 ];
 
-export const CASE_STUDIES: CaseStudy[] = [
+const RAW_CASE_STUDIES: CaseStudy[] = [
   {
     id: 'cs-1',
     companyName: 'Contoso Omni-Channel Retail',
@@ -1157,3 +1158,30 @@ export const CASE_STUDIES: CaseStudy[] = [
     ],
   },
 ];
+
+// Randomise answer positions / step order once per load (see utils/shuffle.ts).
+export const MCQ_QUESTIONS: MCQQuestion[] = RAW_MCQ_QUESTIONS.map((q) => {
+  const { options, correct } = shuffleOptions(q.options, q.correctIndices);
+  return { ...q, options, correctIndices: correct };
+});
+
+export const DAX_CHALLENGES: DaxChallenge[] = RAW_DAX_CHALLENGES.map((d) => ({
+  ...d,
+  tokenPool: shuffle(d.tokenPool),
+}));
+
+export const POWER_QUERY_CHALLENGES: PowerQueryChallenge[] = RAW_POWER_QUERY_CHALLENGES.map(
+  (p) => {
+    const byId = new Map(p.availableSteps.map((step) => [step.id, step]));
+    const ordered = p.correctStepOrder.map((id) => byId.get(id)!);
+    return { ...p, availableSteps: shuffleAwayFrom(p.availableSteps, ordered) };
+  }
+);
+
+export const CASE_STUDIES: CaseStudy[] = RAW_CASE_STUDIES.map((cs) => ({
+  ...cs,
+  questions: cs.questions.map((q) => {
+    const { options, correct } = shuffleOptions(q.options, [q.correctIndex]);
+    return { ...q, options, correctIndex: correct[0] };
+  }),
+}));

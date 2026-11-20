@@ -98,7 +98,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Header & Controls */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
+      <div className="rounded-3xl bg-slate-900 p-5">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-xl font-bold text-white sm:text-2xl">
@@ -109,13 +109,13 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
             </p>
           </div>
           <div className="flex items-center gap-3 text-xs">
-            <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950 px-3 py-2">
               <span className="text-slate-400">Skills Checked: </span>
               <span className="font-bold text-emerald-400">
                 {completedSkillsCount}/{totalSkillsCount}
               </span>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950 px-3 py-2">
               <span className="text-slate-400">Videos Watched: </span>
               <span className="font-bold text-rose-400">
                 {progress.watchedVideos.length}/{VIDEO_RESOURCES.length}
@@ -129,9 +129,9 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setActiveSubSection('modules')}
-              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition ${
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
                 activeSubSection === 'modules'
-                  ? 'bg-amber-400 text-slate-950'
+                  ? 'bg-accent text-slate-950'
                   : 'border border-slate-700 bg-slate-800/80 text-slate-300 hover:bg-slate-800'
               }`}
             >
@@ -140,9 +140,9 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
             </button>
             <button
               onClick={() => setActiveSubSection('videos')}
-              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition ${
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
                 activeSubSection === 'videos'
-                  ? 'bg-rose-500 text-white'
+                  ? 'bg-rose-400 text-slate-950'
                   : 'border border-slate-700 bg-slate-800/80 text-slate-300 hover:bg-slate-800'
               }`}
             >
@@ -158,7 +158,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search skills, DAX, RLS, Query Folding..."
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+              className="w-full rounded-2xl border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-xs text-slate-100 placeholder-slate-500 focus:border-accent focus:outline-none"
             />
           </div>
         </div>
@@ -167,7 +167,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
         <div className="mt-4 flex flex-wrap gap-2">
           <button
             onClick={() => onChangeDomainFilter('all')}
-            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
               selectedDomainFilter === 'all'
                 ? 'bg-slate-100 text-slate-950'
                 : 'border border-slate-800 bg-slate-950 text-slate-400 hover:text-white'
@@ -179,9 +179,9 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
             <button
               key={d.id}
               onClick={() => onChangeDomainFilter(d.id)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+              className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
                 selectedDomainFilter === d.id
-                  ? 'bg-amber-400/20 text-amber-200 border border-amber-400/50'
+                  ? 'bg-accent/20 text-accent border border-accent/50'
                   : 'border border-slate-800 bg-slate-950 text-slate-400 hover:text-white'
               }`}
             >
@@ -195,8 +195,8 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
       {activeSubSection === 'modules' && (
         <div className="space-y-4">
           {filteredModules.length === 0 ? (
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-10 text-center text-sm text-slate-400">
-              No Microsoft Learn modules match "{searchQuery}". Try clearing the search filter.
+            <div className="rounded-3xl bg-slate-900 p-10 text-center text-sm text-slate-400">
+              No Microsoft Learn modules match these filters. Try clearing the search.
             </div>
           ) : (
             filteredModules.map((mod) => {
@@ -210,7 +210,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               return (
                 <div
                   key={mod.id}
-                  className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 transition hover:border-slate-700"
+                  className="overflow-hidden rounded-3xl bg-slate-900 transition hover:border-slate-700"
                 >
                   {/* Module Header */}
                   <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
@@ -241,14 +241,14 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                         href={mod.msLearnUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-xs font-medium text-sky-300 transition hover:bg-sky-500/20"
+                        className="inline-flex items-center gap-1.5 rounded-2xl border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-xs font-medium text-sky-300 transition hover:bg-sky-500/20"
                       >
                         MS Learn Module
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                       <button
                         onClick={() => toggleExpand(mod.id)}
-                        className="inline-flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-700"
+                        className="inline-flex items-center gap-1 rounded-2xl border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-700"
                       >
                         {isExpanded ? (
                           <>
@@ -272,7 +272,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                           <button
                             key={skill.id}
                             onClick={() => onToggleSkill(skill.id)}
-                            className={`flex items-start gap-2.5 rounded-xl border px-3 py-2 text-left text-xs transition ${
+                            className={`flex items-start gap-2.5 rounded-2xl border px-3 py-2 text-left text-xs transition ${
                               checked
                                 ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-100'
                                 : 'border-slate-800/80 bg-slate-900/50 text-slate-300 hover:border-slate-700'
@@ -296,7 +296,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                   {isExpanded && (
                     <div className="grid gap-4 border-t border-slate-800 bg-slate-950/70 p-5 lg:grid-cols-2">
                       <div className="space-y-3">
-                        <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-3.5">
+                        <div className="rounded-2xl border border-amber-500/25 bg-amber-500/5 p-3.5">
                           <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-amber-300">
                             <AlertCircle className="h-4 w-4" />
                             High-Yield Exam Traps
@@ -311,7 +311,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                           </ul>
                         </div>
 
-                        <div className="rounded-xl border border-slate-800 bg-slate-900 p-3.5">
+                        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-3.5">
                           <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-sky-300">
                             <Code2 className="h-4 w-4" />
                             Must-Know DAX / M Patterns
@@ -330,7 +330,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                       </div>
 
                       {/* Personal Study Notes */}
-                      <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-900 p-3.5">
+                      <div className="flex flex-col rounded-2xl border border-slate-800 bg-slate-900 p-3.5">
                         <div className="mb-2 flex items-center justify-between">
                           <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-300">
                             <NotebookPen className="h-4 w-4 text-violet-400" />
@@ -358,13 +358,13 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
       {/* YOUTUBE STUDY HUB SECTION */}
       {activeSubSection === 'videos' && (
         <div className="space-y-4">
-          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-800 bg-slate-900/50 p-3">
+          <div className="flex flex-wrap items-center gap-2 rounded-3xl bg-slate-900 p-3">
             <span className="text-xs font-medium text-slate-400 mr-1">Creator:</span>
             {CHANNELS.map((ch) => (
               <button
                 key={ch}
                 onClick={() => setChannelFilter(ch)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
+                className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${
                   channelFilter === ch
                     ? 'bg-rose-500/20 text-rose-200 border border-rose-500/40'
                     : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-white'
@@ -375,6 +375,11 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
             ))}
           </div>
 
+          {filteredVideos.length === 0 && (
+            <div className="rounded-3xl bg-slate-900 p-10 text-center text-sm text-slate-400">
+              No videos match these filters. Try another creator or clear the search.
+            </div>
+          )}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredVideos.map((vid) => {
               const watched = progress.watchedVideos.includes(vid.id);
@@ -418,7 +423,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                   <div className="mt-4 flex items-center justify-between gap-2 border-t border-slate-800/80 pt-3">
                     <button
                       onClick={() => onToggleVideo(vid.id)}
-                      className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium transition ${
                         watched
                           ? 'bg-emerald-500/20 text-emerald-300'
                           : 'bg-slate-800 text-slate-300 hover:bg-slate-700'

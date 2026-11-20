@@ -27,11 +27,13 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
   );
   const [activeSlotIdx, setActiveSlotIdx] = useState<number>(0);
   const [checkedState, setCheckedState] = useState<'idle' | 'correct' | 'incorrect'>('idle');
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     setSlots(challenge.correctSlots.map(() => null));
     setActiveSlotIdx(0);
     setCheckedState('idle');
+    setRevealed(false);
   }, [activeChallengeIdx, challenge.correctSlots]);
 
   const handleTokenClick = (token: string) => {
@@ -76,15 +78,16 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
   };
 
   const handleRevealSolution = () => {
+    // Showing the answer is a study aid only — it doesn't earn lab credit.
     setSlots([...challenge.correctSlots]);
     setCheckedState('correct');
-    onMarkDaxCompleted(challenge.id);
+    setRevealed(true);
   };
 
   return (
     <div className="grid gap-4 lg:grid-cols-12">
       {/* Left Challenge Selector */}
-      <div className="lg:col-span-4 space-y-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+      <div className="lg:col-span-4 space-y-2 rounded-3xl bg-slate-900 p-4">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
             DAX Slot Challenges
@@ -100,7 +103,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
             <button
               key={item.id}
               onClick={() => setActiveChallengeIdx(idx)}
-              className={`flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-left text-xs transition ${
+              className={`flex w-full items-center justify-between gap-2 rounded-2xl border px-3 py-2.5 text-left text-xs transition ${
                 active
                   ? 'border-sky-400 bg-sky-500/15 text-white'
                   : 'border-slate-800 bg-slate-950/70 text-slate-300 hover:border-slate-700'
@@ -119,7 +122,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
       </div>
 
       {/* Right Interactive Formula Builder */}
-      <div className="lg:col-span-8 rounded-2xl border border-slate-800 bg-slate-900/70 p-6 space-y-5">
+      <div className="lg:col-span-8 rounded-3xl bg-slate-900 p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Code2 className="h-5 w-5 text-sky-400" />
@@ -130,7 +133,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
           </span>
         </div>
 
-        <div className="space-y-2 rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+        <div className="space-y-2 rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
           <p className="text-sm leading-relaxed text-slate-200">{challenge.businessScenario}</p>
           <p className="font-mono text-[11px] text-slate-400">
             Schema: {challenge.schemaContext}
@@ -138,7 +141,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
         </div>
 
         {/* Formula Code Editor Area */}
-        <div className="rounded-xl border border-slate-700 bg-slate-950 p-5">
+        <div className="rounded-2xl border border-slate-700 bg-slate-950 p-5">
           <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             Click a slot below, then click a DAX token to place it (click filled slot to clear)
           </div>
@@ -160,7 +163,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
                 } else if (val) {
                   slotStyle = 'border-sky-400 bg-sky-500/20 text-sky-200';
                 } else if (isSelected) {
-                  slotStyle = 'border-amber-400 bg-amber-400/10 text-amber-200';
+                  slotStyle = 'border-accent bg-accent/10 text-accent';
                 }
 
                 return (
@@ -190,7 +193,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
               <button
                 key={token}
                 onClick={() => handleTokenClick(token)}
-                className="rounded-xl border border-slate-700 bg-slate-800 px-3.5 py-2 font-mono text-xs font-semibold text-sky-200 transition hover:border-sky-400 hover:bg-slate-700"
+                className="rounded-2xl border border-slate-700 bg-slate-800 px-3.5 py-2 font-mono text-xs font-semibold text-sky-200 transition hover:border-sky-400 hover:bg-slate-700"
               >
                 {token}
               </button>
@@ -204,7 +207,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
             <button
               disabled={slots.some((s) => s === null)}
               onClick={handleCheck}
-              className="rounded-xl bg-amber-400 px-4 py-2 text-xs font-bold text-slate-950 transition hover:bg-amber-300 disabled:opacity-40"
+              className="rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-slate-950 transition hover:bg-accent-hover disabled:opacity-40"
             >
               Validate Formula
             </button>
@@ -213,8 +216,9 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
                 setSlots(challenge.correctSlots.map(() => null));
                 setActiveSlotIdx(0);
                 setCheckedState('idle');
+                setRevealed(false);
               }}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800"
+              className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Clear
@@ -222,7 +226,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
           </div>
           <button
             onClick={handleRevealSolution}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-medium text-slate-300 hover:text-white"
+            className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-medium text-slate-300 hover:text-white"
           >
             <Sparkles className="h-3.5 w-3.5 text-amber-400" />
             Show Solution
@@ -231,7 +235,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
 
         {/* Feedback */}
         {checkedState === 'incorrect' && (
-          <div className="flex items-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3.5 text-xs text-rose-200">
+          <div className="flex items-center gap-2 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-3.5 text-xs text-rose-200">
             <XCircle className="h-4 w-4 shrink-0 text-rose-400" />
             <span>
               Not quite! Click any highlighted red slot to clear it and try another DAX modifier.
@@ -240,10 +244,12 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
         )}
 
         {checkedState === 'correct' && (
-          <div className="space-y-2.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-xs">
+          <div className="space-y-2.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-xs">
             <div className="flex items-center gap-2 font-bold text-emerald-300">
               <CheckCircle2 className="h-4 w-4" />
-              Formula Correct! Evaluation Context Breakdown:
+              {revealed
+                ? 'Solution revealed — not counted. Clear and rebuild it to earn credit.'
+                : 'Formula Correct! Evaluation Context Breakdown:'}
             </div>
             <p className="leading-relaxed text-slate-200">{challenge.explanation}</p>
             <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5 text-amber-200">

@@ -65,9 +65,9 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
       const match = line.slice(idx, idx + highlightedQuote.length);
       const after = line.slice(idx + highlightedQuote.length);
       return (
-        <p key={i} className="rounded-lg border border-amber-400/50 bg-amber-400/10 p-2.5 leading-relaxed text-slate-100">
+        <p key={i} className="rounded-lg border border-accent/50 bg-accent/10 p-2.5 leading-relaxed text-slate-100">
           {before}
-          <mark className="rounded bg-amber-400 px-1 py-0.5 font-semibold text-slate-950">
+          <mark className="rounded bg-accent px-1 py-0.5 font-semibold text-slate-950">
             {match}
           </mark>
           {after}
@@ -84,7 +84,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
   return (
     <div className="space-y-4">
       {/* Case Study Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-slate-900 p-4">
         <div className="flex flex-wrap gap-2">
           {CASE_STUDIES.map((cs, idx) => {
             const best = progress.caseStudyScores[cs.id] ?? 0;
@@ -92,7 +92,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
               <button
                 key={cs.id}
                 onClick={() => setCsIdx(idx)}
-                className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-semibold transition ${
+                className={`inline-flex items-center gap-2 rounded-2xl border px-3.5 py-2 text-xs font-semibold transition ${
                   idx === csIdx
                     ? 'border-emerald-400 bg-emerald-500/15 text-white'
                     : 'border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700'
@@ -115,7 +115,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
             setHighlightedQuote(null);
             setQuestionIdx(0);
           }}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:text-white"
+          className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:text-white"
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Restart Case Study
@@ -125,7 +125,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
       {/* Split Screen Layout: Left Exhibits | Right Questions */}
       <div className="grid gap-4 lg:grid-cols-12">
         {/* LEFT PANE: 5-Tab Exhibit Browser */}
-        <div className="lg:col-span-6 flex flex-col rounded-2xl border border-slate-800 bg-slate-900/70 overflow-hidden">
+        <div className="lg:col-span-6 flex flex-col rounded-3xl bg-slate-900 overflow-hidden">
           <div className="border-b border-slate-800 bg-slate-950/60 p-4">
             <div className="flex items-center gap-2 text-xs font-semibold text-emerald-300">
               <Layers className="h-4 w-4" />
@@ -146,9 +146,9 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                     setActiveExhibitId(ex.id);
                     setHighlightedQuote(null);
                   }}
-                  className={`rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition ${
+                  className={`rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition ${
                     isSelected
-                      ? 'bg-amber-400 text-slate-950'
+                      ? 'bg-accent text-slate-950'
                       : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white'
                   }`}
                 >
@@ -178,11 +178,11 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
         </div>
 
         {/* RIGHT PANE: Linked Questions */}
-        <div className="lg:col-span-6 flex flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/70 p-5 space-y-5">
+        <div className="lg:col-span-6 flex flex-col justify-between rounded-3xl bg-slate-900 p-5 space-y-5">
           <div className="space-y-4">
             {/* Question Number Pills */}
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex gap-1.5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {caseStudy.questions.map((q, idx) => {
                   const isRev = revealed[q.id];
                   const isRight = isRev && answers[q.id] === q.correctIndex;
@@ -194,7 +194,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                         setHighlightedQuote(null);
                       }}
                       className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition ${
-                        idx === questionIdx ? 'ring-2 ring-amber-400 ' : ''
+                        idx === questionIdx ? 'ring-2 ring-accent ' : ''
                       }${
                         isRev
                           ? isRight
@@ -211,7 +211,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
 
               <button
                 onClick={handleHighlightEvidence}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-semibold text-amber-200 transition hover:bg-amber-400/20"
+                className="inline-flex items-center gap-1.5 rounded-2xl border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent transition hover:bg-accent/20"
               >
                 <Highlighter className="h-3.5 w-3.5" />
                 Highlight Evidence in Exhibit
@@ -245,7 +245,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                   <button
                     key={idx}
                     onClick={() => handleChoose(idx)}
-                    className={`flex w-full items-start gap-2.5 rounded-xl border p-3 text-left text-xs transition sm:text-sm ${style}`}
+                    className={`flex w-full items-start gap-2.5 rounded-2xl border p-3 text-left text-xs transition sm:text-sm ${style}`}
                   >
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-current text-[11px] font-bold">
                       {String.fromCharCode(65 + idx)}
@@ -263,7 +263,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
             </div>
 
             {revealed[currentQ.id] && (
-              <div className="rounded-xl border border-slate-700 bg-slate-950 p-4 text-xs">
+              <div className="rounded-2xl border border-slate-700 bg-slate-950 p-4 text-xs">
                 <div className="font-bold uppercase tracking-wider text-emerald-400">
                   Case Study Rationale
                 </div>
@@ -279,7 +279,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                 setQuestionIdx((i) => Math.max(0, i - 1));
                 setHighlightedQuote(null);
               }}
-              className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-200 disabled:opacity-40"
+              className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-200 disabled:opacity-40"
             >
               Previous Q
             </button>
@@ -289,7 +289,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                 setQuestionIdx((i) => Math.min(caseStudy.questions.length - 1, i + 1));
                 setHighlightedQuote(null);
               }}
-              className="rounded-xl bg-amber-400 px-3.5 py-1.5 text-xs font-bold text-slate-950 disabled:opacity-40"
+              className="rounded-2xl bg-accent px-3.5 py-1.5 text-xs font-bold text-slate-950 disabled:opacity-40"
             >
               Next Q
             </button>

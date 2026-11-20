@@ -1,4 +1,5 @@
 import { Flashcard, MatrixDrill } from '../types/pl300';
+import { shuffle } from '../utils/shuffle';
 
 export const WORKSPACE_ROLE_MATRIX = [
   {
@@ -118,7 +119,7 @@ export const DAX_MODIFIER_MATRIX = [
   },
 ];
 
-export const MATRIX_DRILLS: MatrixDrill[] = [
+const RAW_MATRIX_DRILLS: MatrixDrill[] = [
   // Workspace Roles (6)
   {
     id: 'md-w1',
@@ -619,3 +620,9 @@ export const FLASHCARDS: Flashcard[] = [
     back: 'Promoted = creator self-endorsement; Certified = approved by authorized CoE reviewers. RLS hides ROWS; Object-Level Security (OLS) hides entire TABLES or COLUMNS.',
   },
 ];
+
+// correctOption is matched by value, so options can be shuffled freely.
+export const MATRIX_DRILLS: MatrixDrill[] = RAW_MATRIX_DRILLS.map((d) => ({
+  ...d,
+  options: shuffle(d.options),
+}));

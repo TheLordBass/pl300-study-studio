@@ -83,13 +83,13 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
               onClick={() => onChangeSubTab(tab.id)}
               className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition ${
                 active
-                  ? 'border-amber-400 bg-amber-400/15 text-white shadow-lg shadow-amber-500/5'
-                  : 'border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700 hover:bg-slate-900'
+                  ? 'border-accent bg-accent/15 text-white shadow-lg shadow-accent/10'
+                  : 'border-transparent bg-slate-900 text-slate-300 hover:bg-slate-800'
               }`}
             >
               <div
-                className={`rounded-xl p-2.5 ${
-                  active ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-amber-400'
+                className={`rounded-2xl p-2.5 ${
+                  active ? 'bg-accent text-slate-950' : 'bg-slate-800 text-amber-400'
                 }`}
               >
                 <Icon className="h-5 w-5" />

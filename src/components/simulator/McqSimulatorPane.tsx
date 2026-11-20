@@ -98,6 +98,16 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
     });
   };
 
+  // Auto-grade when the clock runs out (previously the exam just froze at 0:00).
+  useEffect(() => {
+    if (mode === 'timed' && !examSubmitted && secondsLeft === 0) {
+      handleSubmitTimedExam();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, examSubmitted, secondsLeft]);
+
+  const examRunning = mode === 'timed' && !examSubmitted;
+
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
     const s = secs % 60;
@@ -117,12 +127,14 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
   return (
     <div className="space-y-4">
       {/* Filter & Mode Toolbar */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 rounded-3xl bg-slate-900 p-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-2">
           <select
+            disabled={examRunning}
+            title={examRunning ? 'Finish the timed exam to change filters' : undefined}
             value={domainFilter}
             onChange={(e) => onChangeDomainFilter(e.target.value as DomainId | 'all')}
-            className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-amber-400 focus:outline-none"
+            className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent focus:outline-none"
           >
             <option value="all">All Domains ({MCQ_QUESTIONS.length} Qs)</option>
             {PL300_DOMAINS.map((d) => (
@@ -133,11 +145,12 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           </select>
 
           <select
+            disabled={examRunning}
             value={difficultyFilter}
             onChange={(e) =>
               setDifficultyFilter(e.target.value as 'All' | MCQQuestion['difficulty'])
             }
-            className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-amber-400 focus:outline-none"
+            className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent focus:outline-none"
           >
             <option value="All">All Difficulties</option>
             <option value="Core">Core</option>
@@ -149,12 +162,15 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => {
+              if (examRunning && !window.confirm('Abandon the timed exam in progress?')) return;
               setMode('study');
               setExamSubmitted(false);
+              setSelectedOptions({});
+              setRevealedIds({});
             }}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
               mode === 'study'
-                ? 'bg-amber-400 text-slate-950'
+                ? 'bg-accent text-slate-950'
                 : 'border border-slate-700 bg-slate-950 text-slate-300 hover:bg-slate-800'
             }`}
           >
@@ -162,7 +178,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           </button>
           <button
             onClick={startTimedMode}
-            className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
               mode === 'timed'
                 ? 'bg-sky-400 text-slate-950'
                 : 'border border-slate-700 bg-slate-950 text-slate-300 hover:bg-slate-800'
@@ -172,7 +188,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             Timed Exam Mode
           </button>
           {mode === 'timed' && (
-            <span className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 font-mono text-xs font-bold text-sky-300">
+            <span className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 font-mono text-xs font-bold text-sky-300">
               {formatTime(secondsLeft)}
             </span>
           )}
@@ -208,7 +224,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           </div>
           <button
             onClick={startTimedMode}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white border border-slate-700 hover:bg-slate-800"
+            className="inline-flex items-center gap-1.5 rounded-2xl bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white border border-slate-700 hover:bg-slate-800"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Retake Timed Set
@@ -217,13 +233,13 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
       )}
 
       {!currentQ ? (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-8 text-center text-sm text-slate-400">
+        <div className="rounded-3xl bg-slate-900 p-8 text-center text-sm text-slate-400">
           No questions match the selected filters.
         </div>
       ) : (
         <div className="grid gap-4 lg:grid-cols-12">
           {/* Question Navigator Rail */}
-          <div className="lg:col-span-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+          <div className="lg:col-span-3 rounded-3xl bg-slate-900 p-4">
             <div className="mb-3 flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-300">Question Map</span>
               <span className="text-slate-400">
@@ -257,12 +273,12 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                     key={q.id}
                     onClick={() => setCurrentIdx(idx)}
                     className={`relative rounded-lg border py-2 text-xs font-semibold transition ${pillStyle} ${
-                      idx === safeIdx ? 'ring-2 ring-amber-400' : ''
+                      idx === safeIdx ? 'ring-2 ring-accent' : ''
                     }`}
                   >
                     {idx + 1}
                     {flagged && (
-                      <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-amber-400" />
+                      <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-accent" />
                     )}
                   </button>
                 );
@@ -272,7 +288,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             {mode === 'timed' && !examSubmitted && (
               <button
                 onClick={handleSubmitTimedExam}
-                className="mt-4 w-full rounded-xl bg-amber-400 py-2.5 text-xs font-bold text-slate-950 transition hover:bg-amber-300"
+                className="mt-4 w-full rounded-2xl bg-accent py-2.5 text-xs font-bold text-slate-950 transition hover:bg-accent-hover"
               >
                 Finish & Grade Exam ({Object.keys(selectedOptions).length}/{filteredQuestions.length})
               </button>
@@ -280,7 +296,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           </div>
 
           {/* Active Question Card */}
-          <div className="lg:col-span-9 rounded-2xl border border-slate-800 bg-slate-900/70 p-6 space-y-5">
+          <div className="lg:col-span-9 rounded-3xl bg-slate-900 p-6 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-md bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-amber-300">
@@ -308,7 +324,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                 }
                 className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
                   flaggedIds[currentQ.id]
-                    ? 'border-amber-400/50 bg-amber-400/15 text-amber-300'
+                    ? 'border-accent/50 bg-accent/15 text-accent'
                     : 'border-slate-700 bg-slate-950 text-slate-400 hover:text-white'
                 }`}
               >
@@ -318,7 +334,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             </div>
 
             {/* Scenario */}
-            <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-sm leading-relaxed text-slate-300">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm leading-relaxed text-slate-300">
               {currentQ.scenario}
             </div>
 
@@ -351,7 +367,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                   <button
                     key={idx}
                     onClick={() => handleSelectOption(idx)}
-                    className={`flex w-full items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition ${style}`}
+                    className={`flex w-full items-start gap-3 rounded-2xl border p-3.5 text-left text-sm transition ${style}`}
                   >
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-current text-[11px] font-bold">
                       {String.fromCharCode(65 + idx)}
@@ -371,7 +387,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             {/* Explanation Panel */}
             {((mode === 'study' && revealedIds[currentQ.id]) ||
               (mode === 'timed' && examSubmitted)) && (
-              <div className="space-y-3 rounded-xl border border-slate-700 bg-slate-950 p-4">
+              <div className="space-y-3 rounded-2xl border border-slate-700 bg-slate-950 p-4">
                 <div>
                   <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
                     Why this answer works
@@ -395,7 +411,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
               <button
                 disabled={safeIdx === 0}
                 onClick={() => setCurrentIdx((i) => Math.max(0, i - 1))}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2 text-xs font-medium text-slate-200 disabled:opacity-40 hover:bg-slate-800"
+                className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-950 px-3.5 py-2 text-xs font-medium text-slate-200 disabled:opacity-40 hover:bg-slate-800"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
                 Previous
@@ -423,7 +439,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                 onClick={() =>
                   setCurrentIdx((i) => Math.min(filteredQuestions.length - 1, i + 1))
                 }
-                className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-3.5 py-2 text-xs font-semibold text-slate-950 disabled:opacity-40 hover:bg-amber-300"
+                className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 text-xs font-semibold text-slate-950 disabled:opacity-40 hover:bg-accent-hover"
               >
                 Next
                 <ArrowRight className="h-3.5 w-3.5" />
