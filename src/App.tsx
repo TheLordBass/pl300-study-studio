@@ -28,7 +28,7 @@ import { Sparkle } from './components/ui/Sparkle';
 import { DashboardView } from './components/DashboardView';
 import { CurriculumHubView } from './components/CurriculumHubView';
 import { ExamSimulatorView } from './components/ExamSimulatorView';
-import { CheatSheetMatrixView } from './components/CheatSheetMatrixView';
+import { CheatSheetMatrixView, GuideSection } from './components/CheatSheetMatrixView';
 import { FlashcardsView } from './components/FlashcardsView';
 
 const NAV_ITEMS: {
@@ -40,20 +40,25 @@ const NAV_ITEMS: {
   { id: 'dashboard', label: 'Home', short: 'Home', icon: LayoutDashboard },
   { id: 'curriculum', label: 'Curriculum & Videos', short: 'Learn', icon: BookOpen },
   { id: 'simulator', label: 'Exam Simulator', short: 'Exam', icon: Target },
-  { id: 'matrix', label: 'Matrix & Cheat Sheets', short: 'Drills', icon: Flame },
+  { id: 'matrix', label: 'Cheat Sheets & Guides', short: 'Guides', icon: Flame },
   { id: 'flashcards', label: 'Flashcards', short: 'Cards', icon: Brain },
 ];
 
 const TABS: MainTab[] = NAV_ITEMS.map((n) => n.id);
-const SUB_TABS: SimulatorSubTab[] = ['mcq', 'dax', 'powerquery', 'casestudy'];
+const SUB_TABS: SimulatorSubTab[] = ['mcq', 'dax', 'powerquery', 'pqlab', 'casestudy'];
 const SIDEBAR_KEY = 'pl300_sidebar_collapsed';
 
 /** Read "#/simulator/dax" style hashes so refreshes and shared links keep the page. */
-function readHash(): { tab: MainTab; sub?: SimulatorSubTab } {
+const GUIDE_SECTIONS: GuideSection[] = ['dax', 'pq', 'drills', 'cheatsheets'];
+
+/** Read "#/simulator/dax" or "#/matrix/pq" style hashes so refreshes and links keep the page. */
+function readHash(): { tab: MainTab; sub?: SimulatorSubTab; guide?: GuideSection } {
   const [tab, sub] = window.location.hash.replace(/^#\/?/, '').split('/');
+  const main = TABS.includes(tab as MainTab) ? (tab as MainTab) : 'dashboard';
   return {
-    tab: TABS.includes(tab as MainTab) ? (tab as MainTab) : 'dashboard',
-    sub: SUB_TABS.includes(sub as SimulatorSubTab) ? (sub as SimulatorSubTab) : undefined,
+    tab: main,
+    sub: main === 'simulator' && SUB_TABS.includes(sub as SimulatorSubTab) ? (sub as SimulatorSubTab) : undefined,
+    guide: main === 'matrix' && GUIDE_SECTIONS.includes(sub as GuideSection) ? (sub as GuideSection) : undefined,
   };
 }
 
@@ -61,6 +66,7 @@ export function App() {
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress());
   const [activeTab, setActiveTab] = useState<MainTab>(() => readHash().tab);
   const [simSubTab, setSimSubTab] = useState<SimulatorSubTab>(() => readHash().sub ?? 'mcq');
+  const [guideSection, setGuideSection] = useState<GuideSection>(() => readHash().guide ?? 'dax');
   const [domainFilter, setDomainFilter] = useState<DomainId | 'all'>('all');
   const [theme, toggleTheme] = useTheme();
   const [collapsed, setCollapsed] = useState<boolean>(() => {
@@ -77,17 +83,23 @@ export function App() {
 
   // Keep the URL hash in sync with the current view.
   useEffect(() => {
-    const next = activeTab === 'simulator' ? `#/simulator/${simSubTab}` : `#/${activeTab}`;
+    const next =
+      activeTab === 'simulator'
+        ? `#/simulator/${simSubTab}`
+        : activeTab === 'matrix'
+        ? `#/matrix/${guideSection}`
+        : `#/${activeTab}`;
     if (window.location.hash !== next) {
       window.history.replaceState(null, '', next);
     }
-  }, [activeTab, simSubTab]);
+  }, [activeTab, simSubTab, guideSection]);
 
   useEffect(() => {
     const onHash = () => {
-      const { tab, sub } = readHash();
+      const { tab, sub, guide } = readHash();
       setActiveTab(tab);
       if (sub) setSimSubTab(sub);
+      if (guide) setGuideSection(guide);
     };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
@@ -170,6 +182,14 @@ export function App() {
       prev.pqCompleted.includes(challengeId)
         ? prev
         : { ...prev, pqCompleted: [...prev.pqCompleted, challengeId] }
+    );
+  };
+
+  const markPqLabCompleted = (scenarioId: string) => {
+    setProgress((prev) =>
+      prev.pqLabCompleted.includes(scenarioId)
+        ? prev
+        : { ...prev, pqLabCompleted: [...prev.pqLabCompleted, scenarioId] }
     );
   };
 
@@ -419,6 +439,7 @@ export function App() {
               onRecordMcq={recordMcq}
               onMarkDaxCompleted={markDaxCompleted}
               onMarkPqCompleted={markPqCompleted}
+              onMarkPqLabCompleted={markPqLabCompleted}
               onRecordCaseStudyScore={recordCaseStudyScore}
             />
           )}
@@ -426,6 +447,9 @@ export function App() {
           {activeTab === 'matrix' && (
             <CheatSheetMatrixView
               progress={progress}
+              subMode={guideSection}
+              onChangeSubMode={setGuideSection}
+              onNavigate={(t) => handleNavigateTab('simulator', t)}
               onRecordMatrixDrill={recordMatrixDrill}
             />
           )}

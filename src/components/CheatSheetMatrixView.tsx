@@ -3,12 +3,16 @@ import {
   ArrowRight,
   BookMarked,
   CheckCircle2,
+  Code2,
   Flame,
   Lightbulb,
+  MousePointerClick,
   ShieldAlert,
   Table2,
   XCircle,
 } from 'lucide-react';
+import { DaxCheatSheetView } from './guides/DaxCheatSheetView';
+import { PqGuidesView } from './guides/PqGuidesView';
 import { MatrixCategory, UserProgress } from '../types/pl300';
 import {
   DAX_MODIFIER_MATRIX,
@@ -17,10 +21,22 @@ import {
   WORKSPACE_ROLE_MATRIX,
 } from '../data/matrixAndFlashcardsData';
 
+export type GuideSection = 'dax' | 'pq' | 'drills' | 'cheatsheets';
+
 interface CheatSheetMatrixViewProps {
   progress: UserProgress;
+  subMode: GuideSection;
+  onChangeSubMode: (s: GuideSection) => void;
+  onNavigate: (simulatorTab: 'dax' | 'pqlab') => void;
   onRecordMatrixDrill: (correct: boolean, streak: number) => void;
 }
+
+const SECTIONS: { id: GuideSection; label: string; desc: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { id: 'dax', label: 'DAX cheat sheet', desc: 'Functions, patterns & traps', icon: Code2 },
+  { id: 'pq', label: 'Power Query guides', desc: 'How to & where to click', icon: MousePointerClick },
+  { id: 'drills', label: 'Matrix drills', desc: 'Roles, storage, RLS, visuals', icon: Flame },
+  { id: 'cheatsheets', label: 'Reference tables', desc: 'Roles · storage modes · modifiers', icon: Table2 },
+];
 
 const CATEGORIES: (MatrixCategory | 'All')[] = [
   'All',
@@ -32,9 +48,11 @@ const CATEGORIES: (MatrixCategory | 'All')[] = [
 
 export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
   progress,
+  subMode,
+  onChangeSubMode,
+  onNavigate,
   onRecordMatrixDrill,
 }) => {
-  const [subMode, setSubMode] = useState<'drills' | 'cheatsheets'>('drills');
   const [categoryFilter, setCategoryFilter] = useState<MatrixCategory | 'All'>('All');
   const [drillIdx, setDrillIdx] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -69,42 +87,38 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header Switcher */}
-      <div className="flex flex-col gap-4 rounded-3xl bg-slate-900 p-5 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-white sm:text-2xl">
-            Matrix Drills & Quick Reference Cheat Sheets
-          </h1>
-          <p className="mt-1 text-xs text-slate-400">
-            Lock down the highest-frequency PL-300 decision tables: Workspace Roles, Storage Modes, RLS/OLS, and Visual Selection.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => setSubMode('drills')}
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
-              subMode === 'drills'
-                ? 'bg-violet-400 text-slate-950'
-                : 'border border-slate-700 bg-slate-950 text-slate-300 hover:bg-slate-800'
-            }`}
-          >
-            <Flame className="h-4 w-4" />
-            Rapid-Fire Matrix Drills
-          </button>
-          <button
-            onClick={() => setSubMode('cheatsheets')}
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
-              subMode === 'cheatsheets'
-                ? 'bg-accent text-slate-950'
-                : 'border border-slate-700 bg-slate-950 text-slate-300 hover:bg-slate-800'
-            }`}
-          >
-            <Table2 className="h-4 w-4" />
-            Reference Cheat Sheets
-          </button>
-        </div>
+      {/* Section switcher */}
+      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+        {SECTIONS.map((s) => {
+          const Icon = s.icon;
+          const on = subMode === s.id;
+          return (
+            <button
+              key={s.id}
+              onClick={() => onChangeSubMode(s.id)}
+              aria-current={on ? 'page' : undefined}
+              className={`flex items-center gap-3 rounded-3xl p-4 text-left transition ${
+                on ? 'bg-accent/15 text-white' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+              }`}
+            >
+              <span
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+                  on ? 'bg-accent text-slate-950' : 'bg-slate-950 text-accent'
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-medium">{s.label}</span>
+                <span className="block truncate text-[11px] text-slate-400">{s.desc}</span>
+              </span>
+            </button>
+          );
+        })}
       </div>
+
+      {subMode === 'dax' && <DaxCheatSheetView onPractise={() => onNavigate('dax')} />}
+      {subMode === 'pq' && <PqGuidesView onOpenLab={() => onNavigate('pqlab')} />}
 
       {/* RAPID-FIRE DRILLS */}
       {subMode === 'drills' && activeDrill && (

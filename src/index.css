@@ -219,6 +219,78 @@
   background: var(--color-slate-600);
 }
 
+/* ── Power Query Editor drawing (guides) ──────────────────────────
+   Drawn in Power BI Desktop's own light Office style in both themes, so
+   it looks like the real window learners will open. */
+.pq-mock {
+  --pq-bg: #ffffff;
+  --pq-chrome: #f3f2f1;
+  --pq-line: #d2d0ce;
+  --pq-text: #252423;
+  --pq-muted: #605e5c;
+  --pq-sel: #deecf9;
+  --pq-accent: #0b57d0;
+  background: var(--pq-bg);
+  color: var(--pq-text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+.pq-mock .pq-title { background: #f8f8f8; color: var(--pq-text); border-bottom: 1px solid var(--pq-line); }
+.pq-mock .pq-tabs { background: var(--pq-chrome); }
+.pq-mock .pq-file { background: #217346; color: #fff; }
+.pq-mock .pq-tab-active { background: var(--pq-bg); border: 1px solid var(--pq-line); border-bottom-color: var(--pq-bg); font-weight: 600; }
+.pq-mock .pq-ribbon { background: var(--pq-bg); border-top: 1px solid var(--pq-line); border-bottom: 1px solid var(--pq-line); }
+.pq-mock .pq-group { border-right: 1px solid #e1dfdd; }
+.pq-mock .pq-group-label, .pq-mock .pq-muted { color: var(--pq-muted); }
+.pq-mock .pq-glyph { color: #106ebe; }
+.pq-mock .pq-mini { color: #106ebe; font-size: 9px; }
+.pq-mock .pq-pane { background: var(--pq-bg); border-right: 1px solid var(--pq-line); border-left: 1px solid var(--pq-line); }
+.pq-mock .pq-formula { border: 1px solid var(--pq-line); }
+.pq-mock .pq-grid { border: 1px solid var(--pq-line); }
+.pq-mock .pq-head { background: var(--pq-chrome); border-right: 1px solid var(--pq-line); border-bottom: 1px solid var(--pq-line); }
+.pq-mock .pq-head-sel { background: #c7e0f4; }
+.pq-mock .pq-cell-sel { background: #eff6fc; }
+.pq-mock .pq-type { color: #106ebe; font-weight: 600; }
+.pq-mock .pq-row { border-bottom: 1px solid #edebe9; }
+.pq-mock .pq-selected { background: var(--pq-sel); }
+.pq-mock .pq-status { background: var(--pq-chrome); color: var(--pq-muted); border-top: 1px solid var(--pq-line); }
+.pq-mock .pq-menu { background: #fff; border: 1px solid #c8c6c4; box-shadow: 0 6px 16px rgb(0 0 0 / 0.18); font-size: 12px; }
+.pq-mock .pq-sep { border-top: 1px solid #e1dfdd; }
+.pq-mock .pq-inset { border: 1px solid var(--pq-line); background: #fff; }
+.pq-mock .pq-btn { border: 1px solid #8a8886; border-radius: 2px; }
+.pq-mock .pq-btn-primary { background: #0078d4; color: #fff; border-radius: 2px; }
+.pq-mock .pq-dialog { background: #fff; border: 1px solid #c8c6c4; box-shadow: 0 12px 32px rgb(0 0 0 / 0.25); }
+.pq-mock .pq-valid { background: #107c10; }
+.pq-mock .pq-err { background: #d13438; }
+.pq-mock .pq-hl {
+  outline: 3px solid var(--pq-accent);
+  outline-offset: 1px;
+  border-radius: 4px;
+  background: rgb(11 87 208 / 0.08);
+  animation: pq-pulse 1.6s ease-in-out infinite;
+  z-index: 5;
+}
+.pq-mock .pq-badge {
+  position: absolute;
+  top: -11px;
+  right: -11px;
+  z-index: 6;
+  display: flex;
+  height: 20px;
+  width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--pq-accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px #fff;
+}
+@keyframes pq-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(11 87 208 / 0.35); }
+  50% { box-shadow: 0 0 0 6px rgb(11 87 208 / 0); }
+}
+
 /* 3D card flip utilities (kept for flashcards) */
 .perspective-1000 {
   perspective: 1000px;

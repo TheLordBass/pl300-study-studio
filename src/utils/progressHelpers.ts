@@ -6,6 +6,7 @@ import {
   MCQ_QUESTIONS,
   POWER_QUERY_CHALLENGES,
 } from '../data/examQuestionsData';
+import { PQ_SCENARIOS } from '../pqlab/scenarios';
 
 export const STORAGE_KEY = 'pl300_study_studio_progress_v1';
 export const GIST_CONFIG_KEY = 'pl300_gist_sync_config_v1';
@@ -23,6 +24,7 @@ export const INITIAL_PROGRESS: UserProgress = {
   mcqHistory: {},
   daxCompleted: [],
   pqCompleted: [],
+  pqLabCompleted: [],
   caseStudyScores: {},
   matrixStats: { total: 0, correct: 0, bestStreak: 0 },
   flashcardRatings: {},
@@ -41,6 +43,7 @@ export function normalizeProgress(parsed: Partial<UserProgress>): UserProgress {
       parsed.mcqHistory && typeof parsed.mcqHistory === 'object' ? parsed.mcqHistory : {},
     daxCompleted: Array.isArray(parsed.daxCompleted) ? parsed.daxCompleted : [],
     pqCompleted: Array.isArray(parsed.pqCompleted) ? parsed.pqCompleted : [],
+    pqLabCompleted: Array.isArray(parsed.pqLabCompleted) ? parsed.pqLabCompleted : [],
     caseStudyScores:
       parsed.caseStudyScores && typeof parsed.caseStudyScores === 'object'
         ? parsed.caseStudyScores
@@ -214,7 +217,8 @@ export function computeDomainAnalytics(progress: UserProgress): Record<DomainId,
     if (domainId === 'prepare') {
       labBonus =
         POWER_QUERY_CHALLENGES.length > 0
-          ? progress.pqCompleted.length / POWER_QUERY_CHALLENGES.length
+          ? (progress.pqCompleted.length + progress.pqLabCompleted.length) /
+            (POWER_QUERY_CHALLENGES.length + PQ_SCENARIOS.length)
           : 0;
     } else if (domainId === 'model') {
       const modelDax = DAX_CHALLENGES.filter((d) => d.domain === 'model');

@@ -2,7 +2,7 @@ export type DomainId = 'prepare' | 'model' | 'visualize' | 'manage';
 
 export type MainTab = 'dashboard' | 'curriculum' | 'simulator' | 'matrix' | 'flashcards';
 
-export type SimulatorSubTab = 'mcq' | 'dax' | 'powerquery' | 'casestudy';
+export type SimulatorSubTab = 'mcq' | 'dax' | 'powerquery' | 'pqlab' | 'casestudy';
 
 export interface DomainMeta {
   id: DomainId;
@@ -155,6 +155,7 @@ export interface UserProgress {
   mcqHistory: Record<string, { correct: boolean; attempts: number; lastAnswered: number }>;
   daxCompleted: string[];
   pqCompleted: string[];
+  pqLabCompleted: string[];
   caseStudyScores: Record<string, number>;
   matrixStats: { total: number; correct: number; bestStreak: number };
   flashcardRatings: Record<string, { box: number; lastReviewed: number }>;

@@ -4,6 +4,7 @@ import {
   Code2,
   FileSpreadsheet,
   Layers,
+  Wrench,
 } from 'lucide-react';
 import {
   DomainId,
@@ -14,6 +15,7 @@ import { McqSimulatorPane } from './simulator/McqSimulatorPane';
 import { DaxBuilderPane } from './simulator/DaxBuilderPane';
 import { PowerQuerySequencerPane } from './simulator/PowerQuerySequencerPane';
 import { CaseStudyPane } from './simulator/CaseStudyPane';
+import { PowerQueryLabPane } from './pqlab/PowerQueryLabPane';
 
 interface ExamSimulatorViewProps {
   progress: UserProgress;
@@ -24,6 +26,7 @@ interface ExamSimulatorViewProps {
   onRecordMcq: (questionId: string, correct: boolean) => void;
   onMarkDaxCompleted: (challengeId: string) => void;
   onMarkPqCompleted: (challengeId: string) => void;
+  onMarkPqLabCompleted: (scenarioId: string) => void;
   onRecordCaseStudyScore: (caseStudyId: string, score: number) => void;
 }
 
@@ -52,6 +55,12 @@ const SUB_TABS: {
     icon: FileSpreadsheet,
   },
   {
+    id: 'pqlab',
+    label: 'Power Query Lab',
+    desc: '8 hands-on datasets',
+    icon: Wrench,
+  },
+  {
     id: 'casestudy',
     label: 'Case Study Simulator',
     desc: '5-Tab Exhibits + Evidence',
@@ -68,12 +77,13 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
   onRecordMcq,
   onMarkDaxCompleted,
   onMarkPqCompleted,
+  onMarkPqLabCompleted,
   onRecordCaseStudyScore,
 }) => {
   return (
     <div className="space-y-6">
       {/* Sub-Navigation Cards */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {SUB_TABS.map((tab) => {
           const Icon = tab.icon;
           const active = activeSubTab === tab.id;
@@ -123,6 +133,13 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
         <PowerQuerySequencerPane
           progress={progress}
           onMarkPqCompleted={onMarkPqCompleted}
+        />
+      )}
+
+      {activeSubTab === 'pqlab' && (
+        <PowerQueryLabPane
+          completed={progress.pqLabCompleted}
+          onComplete={onMarkPqLabCompleted}
         />
       )}
 

@@ -25,6 +25,7 @@ import {
   POWER_QUERY_CHALLENGES,
 } from '../data/examQuestionsData';
 import { FLASHCARDS } from '../data/matrixAndFlashcardsData';
+import { PQ_SCENARIOS } from '../pqlab/scenarios';
 import { computeDomainAnalytics, computeReadinessScore } from '../utils/progressHelpers';
 import { ProgressSyncCard } from './ProgressSyncCard';
 import { Sparkle } from './ui/Sparkle';
@@ -126,13 +127,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const caseStudyTotal = CASE_STUDIES.reduce((acc, cs) => acc + cs.questions.length, 0);
   const caseStudyEarned = Object.values(progress.caseStudyScores).reduce((acc, v) => acc + v, 0);
-  const labsDone = progress.daxCompleted.length + progress.pqCompleted.length;
-  const labsTotal = DAX_CHALLENGES.length + POWER_QUERY_CHALLENGES.length;
+  const labsDone =
+    progress.daxCompleted.length + progress.pqCompleted.length + progress.pqLabCompleted.length;
+  const labsTotal = DAX_CHALLENGES.length + POWER_QUERY_CHALLENGES.length + PQ_SCENARIOS.length;
 
   const stats = [
     { label: 'Skills', value: doneSkills, total: totalSkills },
     { label: 'MCQs right', value: totalMcqCorrect, total: MCQ_QUESTIONS.length },
-    { label: 'DAX / PQ labs', value: labsDone, total: labsTotal },
+    { label: 'Labs', value: labsDone, total: labsTotal },
     { label: 'Cards mastered', value: masteredCards, total: allCards.length },
   ];
 
@@ -151,11 +153,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       onClick: () => onNavigateTab('simulator', 'dax'),
     },
     {
-      title: 'Order Power Query steps',
-      detail: 'Unpivot, shape star dimensions and keep query folding.',
-      meta: `${progress.pqCompleted.length}/${POWER_QUERY_CHALLENGES.length} done`,
+      title: 'Clean real data in the Power Query Lab',
+      detail: 'Eight messy datasets: unpivot, merge, append, fill down, group by.',
+      meta: `${progress.pqLabCompleted.length}/${PQ_SCENARIOS.length} scenarios`,
       icon: FileSpreadsheet,
-      onClick: () => onNavigateTab('simulator', 'powerquery'),
+      onClick: () => onNavigateTab('simulator', 'pqlab'),
     },
     {
       title: 'Work through a case study',

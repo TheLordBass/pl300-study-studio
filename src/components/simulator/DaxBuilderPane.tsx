@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { UserProgress } from '../../types/pl300';
 import { DAX_CHALLENGES } from '../../data/examQuestionsData';
+import { DaxRunner } from './DaxRunner';
 
 interface DaxBuilderPaneProps {
   progress: UserProgress;
@@ -260,6 +261,14 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
             </div>
           </div>
         )}
+
+        <DaxRunner
+          key={challenge.id}
+          challenge={challenge}
+          slots={slots}
+          revealed={revealed}
+          onSolved={() => onMarkDaxCompleted(challenge.id)}
+        />
       </div>
     </div>
   );
