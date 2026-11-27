@@ -10,7 +10,7 @@
    Minor: something new to do.
    Patch: fixes and polish only. */
 
-export const APP_VERSION = '2.0.0';
+export const APP_VERSION = '2.1.0';
 export const RELEASED = '2026-11-27';
 
 /** Bumped only when the shape of synced progress changes, so an older build can tell. */
@@ -24,6 +24,16 @@ export interface Release {
 }
 
 export const CHANGELOG: Release[] = [
+  {
+    version: '2.1.0',
+    date: '2026-11-27',
+    title: 'A study plan to exam day',
+    changes: [
+      'The Study plan now opens on a full plan: 36 sessions in six parts, from getting data to exam day, about 45 hours in all.',
+      'Each session says what to focus on, lists its tasks and ends with a check. Most tasks tick themselves as you do them in the app.',
+      'Pick your study days and exam date to get a dated schedule that shows when you fall behind and re-plans from today.',
+    ],
+  },
   {
     version: '2.0.0',
     date: '2026-11-27',

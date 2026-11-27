@@ -61,12 +61,27 @@ export const TOURS: Record<string, Tour> = {
   },
 
   curriculum: {
-    rev: 1,
+    rev: 2,
     steps: [
       {
         at: 'cur-switch',
-        title: 'Modules and videos',
-        text: 'Modules follow Microsoft Learn’s official PL-300 path. Videos are hand-picked walkthroughs you can mark as watched.',
+        title: 'Plan, modules and videos',
+        text: 'The Plan takes you to exam day one session at a time. Modules follow Microsoft Learn’s official PL-300 path, and Videos are hand-picked walkthroughs.',
+      },
+      {
+        at: 'plan-overview',
+        title: 'Set your schedule',
+        text: 'Pick a start date and the days you can study, and add your exam date if it’s booked. Every session gets a date, and you’ll see if you fall behind.',
+      },
+      {
+        at: 'plan-next',
+        title: 'Your next session',
+        text: 'What to focus on, a few tasks and a check before moving on. Most tasks tick themselves when you do them in the app; the rest you tick by hand.',
+      },
+      {
+        at: 'plan-parts',
+        title: 'Six parts',
+        text: 'One per exam domain (two for modelling, where most marks are lost), then review and timed practice. Open any session to read it or work ahead.',
       },
       {
         at: 'cur-filters',

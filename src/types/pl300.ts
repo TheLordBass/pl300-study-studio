@@ -160,4 +160,14 @@ export interface UserProgress {
   matrixStats: { total: number; correct: number; bestStreak: number };
   flashcardRatings: Record<string, { box: number; lastReviewed: number }>;
   customFlashcards: Flashcard[];
+  studyPlan: StudyPlanState;
+}
+
+/** The study plan schedule (null start: not started) and the tasks ticked by hand. */
+export interface StudyPlanState {
+  start: string | null;   // YYYY-MM-DD
+  days: number[];         // study weekdays, 0 = Sunday
+  exam: string | null;    // YYYY-MM-DD
+  done: string[];         // ids of hand-ticked tasks
+  at: number;             // when the schedule was last changed (for merging)
 }

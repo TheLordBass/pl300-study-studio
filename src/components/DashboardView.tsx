@@ -26,6 +26,7 @@ import { FLASHCARDS, MATRIX_DRILLS } from '../data/matrixAndFlashcardsData';
 import { PQ_SCENARIOS } from '../pqlab/scenarios';
 import { computeDomainAnalytics, computeReadinessScore } from '../utils/progressHelpers';
 import { useSyncStatus, whenText } from '../sync/useSyncStatus';
+import { planStatus } from './StudyPlanPanel';
 
 interface DashboardViewProps {
   progress: UserProgress;
@@ -78,6 +79,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const analytics = computeDomainAnalytics(progress);
   const score = computeReadinessScore(analytics, progress);
   const isPassing = score >= 700;
+  const plan = planStatus(progress, score);
 
   const weakest = [...PL300_DOMAINS].sort((a, b) => analytics[a.id].masteryPct - analytics[b.id].masteryPct)[0];
 
@@ -257,6 +259,30 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             Read the modules
           </button>
         </div>
+      </section>
+
+      {/* ===== Study plan ===== */}
+      <section className="flex min-w-0 flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-sm text-slate-400">
+            Study plan · {plan.doneCount} of {plan.total} sessions done
+          </p>
+          <p className="mt-0.5 font-bold text-white">
+            {plan.next ? <>Up next: {plan.next.title}</> : <>Plan finished. Keep your flashcards going until exam day.</>}
+          </p>
+          {plan.next && (
+            <p className="mt-0.5 text-sm text-slate-400">
+              Session {plan.nextIdx + 1}, about {plan.next.minutes} minutes
+              {plan.when ? <>, planned for {plan.when}</> : <>. Set your study days to get a date for each session.</>}
+            </p>
+          )}
+        </div>
+        <button
+          onClick={() => onNavigateTab('curriculum')}
+          className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-lg border border-slate-700 px-3.5 py-2 text-sm font-semibold text-slate-200 hover:border-slate-600 sm:self-auto"
+        >
+          {progress.studyPlan.start ? 'Open the plan' : 'Set up the plan'} <ArrowRight className="h-4 w-4" />
+        </button>
       </section>
 
       {/* ===== Domain chart + labs ===== */}

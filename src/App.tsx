@@ -92,6 +92,8 @@ export function App() {
   const [activeTour, setActiveTour] = useState<string | null>(null);
   const sync = useSyncStatus();
   const [domainFilter, setDomainFilter] = useState<DomainId | 'all'>('all');
+  // Which tab the Study plan opens on: the modules when a link asks for one domain’s, else the plan.
+  const [curSection, setCurSection] = useState<'plan' | 'modules'>('plan');
   const [theme, toggleTheme] = useTheme();
 
   // Sync reads the latest progress through a ref, and can put a new copy in place.
@@ -168,6 +170,7 @@ export function App() {
     setActiveTab(tab);
     if (subTab) setSimSubTab(subTab);
     if (filter !== undefined) setDomainFilter(filter);
+    if (tab === 'curriculum') setCurSection(filter && filter !== 'all' ? 'modules' : 'plan');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -290,6 +293,30 @@ export function App() {
         flashcardRatings: ratings,
       };
     });
+  };
+
+  const updateStudyPlan = (patch: Partial<UserProgress['studyPlan']>) => {
+    setProgress((prev) => ({ ...prev, studyPlan: { ...prev.studyPlan, ...patch, at: Date.now() } }));
+  };
+
+  const togglePlanTask = (taskId: string) => {
+    setProgress((prev) => {
+      const done = prev.studyPlan.done;
+      return {
+        ...prev,
+        studyPlan: {
+          ...prev.studyPlan,
+          done: done.includes(taskId) ? done.filter((id) => id !== taskId) : [...done, taskId],
+        },
+      };
+    });
+  };
+
+  /** Go to a page by its hash (from a study plan task), optionally filtered to a domain. */
+  const openFromPlan = (hash: string, domain?: DomainId) => {
+    if (domain) setDomainFilter(domain);
+    window.location.hash = hash;
+    window.scrollTo({ top: 0 });
   };
 
   const resetProgress = () => {
@@ -481,6 +508,11 @@ export function App() {
               onToggleSkill={toggleSkill}
               onToggleVideo={toggleVideo}
               onUpdateModuleNote={updateModuleNote}
+              initialSection={curSection}
+              readinessScore={readinessScore}
+              onUpdatePlan={updateStudyPlan}
+              onTogglePlanTask={togglePlanTask}
+              onOpen={openFromPlan}
             />
           )}
 

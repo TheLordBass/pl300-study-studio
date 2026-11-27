@@ -84,9 +84,23 @@ const SECTIONS = (openDevices: () => void): Section[] => [
     body: (
       <>
         <P>
-          The Study plan follows Microsoft Learn’s PL-300 learning path, one card per module, plus a hand-picked list of
-          videos.
+          The Study plan has three tabs: the <B>Plan</B>, the <B>Modules</B> from Microsoft Learn’s PL-300 learning path,
+          and a hand-picked list of <B>Videos</B>.
         </P>
+        <P>
+          <B>The Plan</B> is 36 sessions of about an hour, in six parts: Prepare the Data, two parts on modelling and DAX,
+          Visualize and Analyze, Manage and Secure, then review and timed exams. Each session has a focus to read, a few
+          tasks and a “Done when” check.
+        </P>
+        <List
+          items={[
+            <>Tasks that point at something in the app (a module, a video, a lab, a set of questions) <B>tick themselves</B> when you finish it. Tasks done elsewhere, such as building something in Power BI Desktop, you tick by hand.</>,
+            <>Pick a <B>start date and study days</B> and every session gets a date. Add your exam date to see whether the plan finishes in time.</>,
+            <>If you fall behind, <B>Re-plan from today</B> moves the remaining dates on so your next session is today.</>,
+            <>Nothing is locked: open any session to read it or work ahead.</>,
+          ]}
+        />
+        <P>In Modules and Videos:</P>
         <List
           items={[
             <><B>Tick skills</B> as you learn them. They count towards your mastery, so be honest.</>,

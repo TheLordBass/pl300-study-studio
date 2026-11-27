@@ -23,6 +23,7 @@ export const INITIAL_PROGRESS: UserProgress = {
   matrixStats: { total: 0, correct: 0, bestStreak: 0 },
   flashcardRatings: {},
   customFlashcards: [],
+  studyPlan: { start: null, days: [1, 2, 3, 4, 5, 6], exam: null, done: [], at: 0 },
 };
 
 export function normalizeProgress(parsed: Partial<UserProgress>): UserProgress {
@@ -51,6 +52,22 @@ export function normalizeProgress(parsed: Partial<UserProgress>): UserProgress {
         ? parsed.flashcardRatings
         : {},
     customFlashcards: Array.isArray(parsed.customFlashcards) ? parsed.customFlashcards : [],
+    studyPlan: normalizePlan(parsed.studyPlan),
+  };
+}
+
+function normalizePlan(p: unknown): UserProgress['studyPlan'] {
+  const d = INITIAL_PROGRESS.studyPlan;
+  if (!p || typeof p !== 'object') return d;
+  const o = p as Partial<UserProgress['studyPlan']>;
+  const date = (v: unknown) => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null);
+  const days = Array.isArray(o.days) ? o.days.filter((n) => Number.isInteger(n) && n >= 0 && n <= 6) : d.days;
+  return {
+    start: date(o.start),
+    days: days.length ? Array.from(new Set(days)).sort() : d.days,
+    exam: date(o.exam),
+    done: Array.isArray(o.done) ? o.done.filter((x) => typeof x === 'string') : [],
+    at: typeof o.at === 'number' ? o.at : 0,
   };
 }
 

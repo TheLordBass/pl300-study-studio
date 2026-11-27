@@ -11,10 +11,12 @@ import {
   ExternalLink,
   NotebookPen,
   Search,
+  ListChecks,
   Youtube,
 } from 'lucide-react';
 import {
   DomainId,
+  StudyPlanState,
   UserProgress,
   VideoChannel,
 } from '../types/pl300';
@@ -23,6 +25,7 @@ import {
   PL300_DOMAINS,
   VIDEO_RESOURCES,
 } from '../data/curriculumData';
+import { StudyPlanPanel } from './StudyPlanPanel';
 
 interface CurriculumHubViewProps {
   progress: UserProgress;
@@ -31,6 +34,11 @@ interface CurriculumHubViewProps {
   onToggleSkill: (skillId: string) => void;
   onToggleVideo: (videoId: string) => void;
   onUpdateModuleNote: (moduleId: string, note: string) => void;
+  initialSection?: 'plan' | 'modules';
+  readinessScore: number;
+  onUpdatePlan: (patch: Partial<StudyPlanState>) => void;
+  onTogglePlanTask: (taskId: string) => void;
+  onOpen: (hash: string, domain?: DomainId) => void;
 }
 
 const CHANNELS: (VideoChannel | 'All')[] = [
@@ -50,6 +58,11 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
   onToggleSkill,
   onToggleVideo,
   onUpdateModuleNote,
+  initialSection = 'plan',
+  readinessScore,
+  onUpdatePlan,
+  onTogglePlanTask,
+  onOpen,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [channelFilter, setChannelFilter] = useState<VideoChannel | 'All'>('All');
@@ -57,7 +70,16 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
     'prep-1': true,
     'mod-2': true,
   });
-  const [activeSubSection, setActiveSubSection] = useState<'modules' | 'videos'>('modules');
+  const [activeSubSection, setActiveSubSection] = useState<'plan' | 'modules' | 'videos'>(initialSection);
+
+  /** Show one module, open, from a study plan task. */
+  const openModule = (modId: string) => {
+    setActiveSubSection('modules');
+    setSearchQuery('');
+    onChangeDomainFilter('all');
+    setExpandedModules((prev) => ({ ...prev, [modId]: true }));
+    setTimeout(() => document.getElementById(`module-${modId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+  };
 
   const toggleExpand = (modId: string) => {
     setExpandedModules((prev) => ({ ...prev, [modId]: !prev[modId] }));
@@ -105,7 +127,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               Study plan
             </h1>
             <p className="mt-1 text-sm text-slate-400">
-              Every skill the exam measures, grouped into Microsoft Learn modules, plus the videos worth your time.
+              A session-by-session plan to exam day, every skill the exam measures grouped into Microsoft Learn modules, and the videos worth your time.
             </p>
           </div>
           <div className="flex items-center gap-5 text-sm">
@@ -127,6 +149,17 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
         {/* Sub-view switcher + Search */}
         <div data-tour="cur-switch" className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => setActiveSubSection('plan')}
+              className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-xs font-semibold transition ${
+                activeSubSection === 'plan'
+                  ? 'bg-accent text-on-accent'
+                  : 'border border-slate-700 bg-slate-800/80 text-slate-300 hover:bg-slate-800'
+              }`}
+            >
+              <ListChecks className="h-4 w-4" />
+              Plan
+            </button>
             <button
               onClick={() => setActiveSubSection('modules')}
               className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-xs font-semibold transition ${
@@ -151,6 +184,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
             </button>
           </div>
 
+          {activeSubSection !== 'plan' && (
           <div className="relative w-full lg:w-80">
             <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
             <input
@@ -161,9 +195,11 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               className="w-full rounded-xl border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-xs text-slate-100 placeholder-slate-500 focus:border-accent-ink focus:outline-none"
             />
           </div>
+          )}
         </div>
 
         {/* Domain Filter Pills */}
+        {activeSubSection !== 'plan' && (
         <div data-tour="cur-filters" className="mt-4 flex flex-wrap gap-2">
           <button
             onClick={() => onChangeDomainFilter('all')}
@@ -189,7 +225,20 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
             </button>
           ))}
         </div>
+        )}
       </div>
+
+      {activeSubSection === 'plan' && (
+        <StudyPlanPanel
+          progress={progress}
+          readinessScore={readinessScore}
+          onUpdatePlan={onUpdatePlan}
+          onTogglePlanTask={onTogglePlanTask}
+          onToggleVideo={onToggleVideo}
+          onOpen={onOpen}
+          onOpenModule={openModule}
+        />
+      )}
 
       {/* MODULES SECTION */}
       {activeSubSection === 'modules' && (
@@ -210,8 +259,9 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               return (
                 <div
                   key={mod.id}
+                  id={`module-${mod.id}`}
                   data-tour={modIdx === 0 ? 'cur-module' : undefined}
-                  className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900 transition hover:border-slate-700"
+                  className="scroll-mt-20 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 transition hover:border-slate-700"
                 >
                   {/* Module Header */}
                   <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">

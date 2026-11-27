@@ -48,6 +48,7 @@ Until that's done, turning sync on says "Sync isn't available yet" and nothing e
 
 - `src/data/tours.ts`: the spotlight steps for each page. Each step points at an element with a matching `data-tour` attribute, and steps whose element isn't on screen are skipped. A tour runs the first time its page opens; "Don't show tips" turns them all off. Help → Guide replays any of them.
 - `src/components/help/GuidePanel.tsx`: the in-depth guide.
+- `src/data/studyPlan.ts`: the study plan (six parts, 36 sessions). Tasks that point at something in the app tick themselves; `do` tasks are ticked by hand and stored by position (`session.index`), so add new ones at the end of a session. `src/components/StudyPlanPanel.tsx` shows it and works out the dates.
 - `src/components/help/LinkDevicesPanel.tsx`: sync controls, version history, backup files and the device-linking guide.
 
 ## Layout

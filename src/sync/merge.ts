@@ -9,7 +9,8 @@
    - case study scores: the higher
    - notes: if they differ, the longer one (it usually contains the other)
    - drill counters: both sides' new attempts are added to what they agreed on
-   - custom flashcards: the union, by id */
+   - custom flashcards: the union, by id
+   - study plan: the schedule changed most recently, and the union of ticked tasks */
 
 import { UserProgress } from '../types/pl300';
 import { normalizeProgress } from '../utils/progressHelpers';
@@ -69,6 +70,10 @@ export function mergeProgress(local: UserProgress, remote: UserProgress, base: C
     },
     flashcardRatings: latest(L.flashcardRatings, R.flashcardRatings, (v) => v.lastReviewed || 0),
     customFlashcards: Array.from(cards.values()),
+    studyPlan: {
+      ...(R.studyPlan.at > L.studyPlan.at ? R.studyPlan : L.studyPlan),
+      done: union(L.studyPlan.done, R.studyPlan.done),
+    },
   };
 }
 
@@ -85,6 +90,8 @@ export function isEmptyProgress(p: UserProgress): boolean {
     !Object.keys(p.caseStudyScores).length &&
     !p.matrixStats.total &&
     !Object.keys(p.flashcardRatings).length &&
-    !p.customFlashcards.length
+    !p.customFlashcards.length &&
+    !p.studyPlan.start &&
+    !p.studyPlan.done.length
   );
 }
