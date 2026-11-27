@@ -8,7 +8,6 @@ import {
   FileSpreadsheet,
   Plus,
   RotateCcw,
-  Sparkles,
   Trash2,
   XCircle,
 } from 'lucide-react';
@@ -25,9 +24,9 @@ const PreviewTable: React.FC<{ title: string; data: TablePreview; badgeColor: st
   data,
   badgeColor,
 }) => (
-  <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+  <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
     <div className="flex items-center justify-between border-b border-slate-800 px-3 py-2">
-      <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-300">
+      <span className="text-xs font-bold text-slate-300">
         {title}
       </span>
       <span className={`rounded px-2 py-0.5 text-[10px] font-semibold ${badgeColor}`}>
@@ -131,11 +130,11 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
       {/* Challenge List */}
       <div className="lg:col-span-4 space-y-2 rounded-xl border border-slate-800 bg-slate-900 p-4">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-            Power Query Scenarios
+          <h3 className="text-xs font-bold text-slate-300">
+            Scenarios
           </h3>
           <span className="text-xs font-semibold text-amber-400">
-            {progress.pqCompleted.length}/{POWER_QUERY_CHALLENGES.length} Done
+            {progress.pqCompleted.length}/{POWER_QUERY_CHALLENGES.length} done
           </span>
         </div>
         {POWER_QUERY_CHALLENGES.map((item, idx) => {
@@ -144,7 +143,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
             <button
               key={item.id}
               onClick={() => setActiveIdx(idx)}
-              className={`flex w-full items-center justify-between gap-2 rounded-2xl border px-3 py-2.5 text-left text-xs transition ${
+              className={`flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-left text-xs transition ${
                 idx === activeIdx
                   ? 'border-accent bg-accent/15 text-white'
                   : 'border-slate-800 bg-slate-950/70 text-slate-300 hover:border-slate-700'
@@ -167,26 +166,26 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <FileSpreadsheet className="h-5 w-5 text-amber-400" />
-            <h2 className="text-lg font-bold text-white">{challenge.title}</h2>
+            <h2 className="text-lg font-extrabold text-white">{challenge.title}</h2>
           </div>
           <span className="rounded-md bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-300">
             {challenge.difficulty}
           </span>
         </div>
 
-        <p className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm leading-relaxed text-slate-200">
+        <p className="rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-sm leading-relaxed text-slate-200">
           {challenge.scenario}
         </p>
 
         {/* Before / After Preview */}
         <div className="grid gap-3 md:grid-cols-2">
           <PreviewTable
-            title="Raw Source Input"
+            title="Source data"
             data={challenge.messyTablePreview}
             badgeColor="bg-rose-500/15 text-rose-300"
           />
           <PreviewTable
-            title="Target Clean Output"
+            title="What you need"
             data={challenge.cleanTablePreview}
             badgeColor="bg-emerald-500/15 text-emerald-300"
           />
@@ -195,8 +194,8 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
         {/* Step Builder Columns */}
         <div className="grid gap-4 md:grid-cols-2">
           {/* Available Steps */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-            <div className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-300">
+          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+            <div className="mb-3 text-xs font-bold text-slate-300">
               1. Available Transformations
             </div>
             <div className="space-y-2">
@@ -209,7 +208,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
                   <button
                     key={step.id}
                     onClick={() => addStep(step.id)}
-                    className="flex w-full items-start justify-between gap-2 rounded-2xl border border-slate-800 bg-slate-900 p-3 text-left transition hover:border-accent/50"
+                    className="flex w-full items-start justify-between gap-2 rounded-xl border border-slate-800 bg-slate-900 p-3 text-left transition hover:border-accent/50"
                   >
                     <div>
                       <div className="text-xs font-semibold text-white">{step.label}</div>
@@ -233,9 +232,9 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
           </div>
 
           {/* Ordered Applied Steps */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-            <div className="mb-3 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-300">
-              <span>2. Applied Steps (Top → Bottom)</span>
+          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+            <div className="mb-3 flex items-center justify-between text-xs font-bold text-slate-300">
+              <span>Your applied steps</span>
               <span className="text-[11px] font-normal text-slate-400">
                 {selectedIds.length}/{challenge.correctStepOrder.length}
               </span>
@@ -243,7 +242,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
             <div className="space-y-2">
               {selectedIds.length === 0 ? (
                 <div className="rounded-lg border border-dashed border-slate-800 p-6 text-center text-xs text-slate-500">
-                  Click transformations on the left in exact chronological order.
+                  Add steps from the list in the order you’d apply them.
                 </div>
               ) : (
                 selectedIds.map((id, idx) => {
@@ -256,7 +255,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
                   return (
                     <div
                       key={id}
-                      className={`flex items-center justify-between gap-2 rounded-2xl border p-2.5 ${
+                      className={`flex items-center justify-between gap-2 rounded-xl border p-2.5 ${
                         isSpotRight
                           ? 'border-emerald-500/50 bg-emerald-500/10'
                           : isSpotWrong
@@ -314,9 +313,9 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
             <button
               disabled={selectedIds.length !== challenge.correctStepOrder.length}
               onClick={validateSequence}
-              className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-on-accent transition hover:bg-accent-hover disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-bold text-on-accent transition hover:bg-accent-hover disabled:opacity-40"
             >
-              Verify Step Order
+              Check order
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
             <button
@@ -325,7 +324,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
                 setStatus('idle');
                 setRevealed(false);
               }}
-              className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Reset
@@ -333,15 +332,14 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
           </div>
           <button
             onClick={revealSolution}
-            className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-medium text-slate-300 hover:text-white"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-medium text-slate-300 hover:text-white"
           >
-            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-            Show Ideal Sequence
+            Show the answer
           </button>
         </div>
 
         {status === 'incorrect' && (
-          <div className="flex items-center gap-2 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-3.5 text-xs text-rose-200">
+          <div className="flex items-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3.5 text-xs text-rose-200">
             <XCircle className="h-4 w-4 shrink-0 text-rose-400" />
             <span>
               Check step dependencies or Query Folding order — remember to drop junk rows, filter, and clean before promoting/unpivoting or breaking folding!
@@ -350,7 +348,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
         )}
 
         {status === 'correct' && (
-          <div className="space-y-2.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-xs">
+          <div className="space-y-2.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-xs">
             <div className="flex items-center gap-2 font-bold text-emerald-300">
               <CheckCircle2 className="h-4 w-4" />
               {revealed
@@ -359,7 +357,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
             </div>
             <p className="leading-relaxed text-slate-200">{challenge.explanation}</p>
             <div className="rounded-lg border border-sky-500/30 bg-sky-500/10 p-2.5 text-sky-200">
-              <strong>Query Folding & M Note:</strong> {challenge.queryFoldingNote}
+              <strong>Folding note:</strong> {challenge.queryFoldingNote}
             </div>
           </div>
         )}

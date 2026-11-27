@@ -134,7 +134,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             title={examRunning ? 'Finish the timed exam to change filters' : undefined}
             value={domainFilter}
             onChange={(e) => onChangeDomainFilter(e.target.value as DomainId | 'all')}
-            className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent-ink focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent-ink focus:outline-none"
           >
             <option value="all">All Domains ({MCQ_QUESTIONS.length} Qs)</option>
             {PL300_DOMAINS.map((d) => (
@@ -150,9 +150,9 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             onChange={(e) =>
               setDifficultyFilter(e.target.value as 'All' | MCQQuestion['difficulty'])
             }
-            className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent-ink focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent-ink focus:outline-none"
           >
-            <option value="All">All Difficulties</option>
+            <option value="All">All difficulties</option>
             <option value="Core">Core</option>
             <option value="Tricky">Tricky</option>
             <option value="Exam Trap">Exam Trap</option>
@@ -174,7 +174,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                 : 'border border-slate-700 bg-slate-950 text-slate-300 hover:bg-slate-800'
             }`}
           >
-            Study Mode (Instant Feedback)
+            Study mode
           </button>
           <button
             onClick={startTimedMode}
@@ -185,10 +185,10 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             }`}
           >
             <Clock className="h-3.5 w-3.5" />
-            Timed Exam Mode
+            Timed exam
           </button>
           {mode === 'timed' && (
-            <span className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 font-mono text-xs font-bold text-sky-300">
+            <span className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 font-mono text-xs font-bold text-sky-300">
               {formatTime(secondsLeft)}
             </span>
           )}
@@ -198,7 +198,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
       {/* Timed Exam Results Banner */}
       {mode === 'timed' && examSubmitted && (
         <div
-          className={`flex flex-col gap-3 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between ${
+          className={`flex flex-col gap-3 rounded-xl border p-5 sm:flex-row sm:items-center sm:justify-between ${
             timedScaledScore >= 700
               ? 'border-emerald-500/40 bg-emerald-500/10'
               : 'border-amber-500/40 bg-amber-500/10'
@@ -224,10 +224,10 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           </div>
           <button
             onClick={startTimedMode}
-            className="inline-flex items-center gap-1.5 rounded-2xl bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white border border-slate-700 hover:bg-slate-800"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white border border-slate-700 hover:bg-slate-800"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Retake Timed Set
+            Retake the timed set
           </button>
         </div>
       )}
@@ -241,7 +241,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           {/* Question Navigator Rail */}
           <div className="lg:col-span-3 rounded-xl border border-slate-800 bg-slate-900 p-4">
             <div className="mb-3 flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-300">Question Map</span>
+              <span className="font-semibold text-slate-300">Questions</span>
               <span className="text-slate-400">
                 {safeIdx + 1} / {filteredQuestions.length}
               </span>
@@ -288,7 +288,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             {mode === 'timed' && !examSubmitted && (
               <button
                 onClick={handleSubmitTimedExam}
-                className="mt-4 w-full rounded-2xl bg-accent py-2.5 text-xs font-bold text-on-accent transition hover:bg-accent-hover"
+                className="mt-4 w-full rounded-xl bg-accent py-2.5 text-xs font-bold text-on-accent transition hover:bg-accent-hover"
               >
                 Finish & Grade Exam ({Object.keys(selectedOptions).length}/{filteredQuestions.length})
               </button>
@@ -329,16 +329,16 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                 }`}
               >
                 <Flag className="h-3.5 w-3.5" />
-                {flaggedIds[currentQ.id] ? 'Flagged' : 'Flag for Review'}
+                {flaggedIds[currentQ.id] ? 'Flagged' : 'Flag for review'}
               </button>
             </div>
 
             {/* Scenario */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm leading-relaxed text-slate-300">
+            <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-sm leading-relaxed text-slate-300">
               {currentQ.scenario}
             </div>
 
-            <h3 className="text-base font-semibold text-white">{currentQ.question}</h3>
+            <h3 className="text-base font-bold text-white">{currentQ.question}</h3>
 
             {/* Options */}
             <div className="space-y-2.5">
@@ -360,14 +360,14 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                     style = 'border-slate-800/60 bg-slate-950/30 text-slate-500';
                   }
                 } else if (chosen) {
-                  style = 'border-sky-400 bg-sky-500/15 text-white';
+                  style = 'border-accent bg-accent/15 text-white';
                 }
 
                 return (
                   <button
                     key={idx}
                     onClick={() => handleSelectOption(idx)}
-                    className={`flex w-full items-start gap-3 rounded-2xl border p-3.5 text-left text-sm transition ${style}`}
+                    className={`flex w-full items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition ${style}`}
                   >
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-current text-[11px] font-bold">
                       {String.fromCharCode(65 + idx)}
@@ -387,9 +387,9 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             {/* Explanation Panel */}
             {((mode === 'study' && revealedIds[currentQ.id]) ||
               (mode === 'timed' && examSubmitted)) && (
-              <div className="space-y-3 rounded-2xl border border-slate-700 bg-slate-950 p-4">
+              <div className="space-y-3 rounded-xl border border-slate-700 bg-slate-950 p-4">
                 <div>
-                  <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  <div className="text-xs font-bold text-emerald-400">
                     Why this answer works
                   </div>
                   <p className="mt-1 text-xs leading-relaxed text-slate-200">
@@ -399,7 +399,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                 <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
                   <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
                   <div>
-                    <span className="font-semibold">Exam Tip: </span>
+                    <span className="font-semibold">Exam tip: </span>
                     {currentQ.examTip}
                   </div>
                 </div>
@@ -411,7 +411,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
               <button
                 disabled={safeIdx === 0}
                 onClick={() => setCurrentIdx((i) => Math.max(0, i - 1))}
-                className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-950 px-3.5 py-2 text-xs font-medium text-slate-200 disabled:opacity-40 hover:bg-slate-800"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2 text-xs font-medium text-slate-200 disabled:opacity-40 hover:bg-slate-800"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
                 Previous
@@ -430,7 +430,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                   className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
-                  Retry Question
+                  Try again
                 </button>
               )}
 
@@ -439,7 +439,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                 onClick={() =>
                   setCurrentIdx((i) => Math.min(filteredQuestions.length - 1, i + 1))
                 }
-                className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 text-xs font-semibold text-on-accent disabled:opacity-40 hover:bg-accent-hover"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-xs font-semibold text-on-accent disabled:opacity-40 hover:bg-accent-hover"
               >
                 Next
                 <ArrowRight className="h-3.5 w-3.5" />

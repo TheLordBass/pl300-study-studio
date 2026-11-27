@@ -46,7 +46,7 @@ const Card: React.FC<{ title?: string; action?: React.ReactNode; className?: str
   <section className={`min-w-0 rounded-xl border border-slate-800 bg-slate-900 p-5 ${className}`}>
     {(title || action) && (
       <div className="mb-4 flex items-center justify-between gap-3">
-        {title && <h3 className="text-[13px] font-semibold uppercase tracking-wider text-slate-400">{title}</h3>}
+        {title && <h3 className="text-[15px] font-bold text-white">{title}</h3>}
         {action}
       </div>
     )}
@@ -167,22 +167,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* ===== Page title ===== */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Report · {updated}</p>
-          <h1 className="mt-1 text-3xl font-bold text-white sm:text-4xl">
-            Exam <span className="marker">readiness</span>
-          </h1>
+          <h1 className="text-3xl font-extrabold text-white sm:text-[2.1rem]">Exam readiness</h1>
+          <p className="mt-1 text-sm text-slate-400">Where you stand today, {updated}.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => onNavigateTab('simulator', 'mcq', 'all')}
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition hover:bg-accent-hover"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-bold text-on-accent transition hover:bg-accent-hover"
           >
             <Target className="h-4 w-4" />
             Practice questions
           </button>
           <button
             onClick={() => onNavigateTab('curriculum')}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-slate-600"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-600"
           >
             <BookOpen className="h-4 w-4" />
             Study plan
@@ -190,82 +188,85 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
-      {/* ===== Score + KPIs ===== */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card title="Simulated exam score" className="lg:row-span-2">
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-6xl font-bold tabular-nums leading-none text-white">{score}</span>
-            <span className="text-sm text-slate-500">/ 1000</span>
+      {/* ===== Score + stats in one panel ===== */}
+      <section className="grid min-w-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div className="p-5 sm:p-6">
+          <h3 className="text-[15px] font-bold text-white">Simulated exam score</h3>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="font-display text-6xl font-black tabular-nums leading-none text-white">{score}</span>
+            <span className="text-sm text-slate-500">out of 1000</span>
           </div>
           <div className="mt-5">
-            <Bar pct={score / 10} marker={70} height="h-3" tone={isPassing ? 'good' : 'accent'} />
-            <div className="mt-1.5 flex justify-between text-[11px] text-slate-500">
-              <span>0</span>
-              <span className="font-medium text-slate-300">Pass mark 700</span>
-              <span>1000</span>
+            <Bar pct={score / 10} marker={70} height="h-2.5" tone={isPassing ? 'good' : 'accent'} />
+            <div className="relative mt-1.5 h-4 text-[11px] text-slate-500">
+              <span className="absolute left-0">0</span>
+              <span className="absolute -translate-x-1/2 font-semibold text-slate-300" style={{ left: '70%' }}>
+                700 to pass
+              </span>
+              <span className="absolute right-0">1000</span>
             </div>
           </div>
-          <p className={`mt-4 text-sm font-medium ${isPassing ? 'text-emerald-300' : 'text-slate-300'}`}>
-            {isPassing ? 'On track to pass.' : `${700 - score} points to the pass mark.`}
+          <p className={`mt-4 text-sm font-semibold ${isPassing ? 'text-emerald-300' : 'text-slate-200'}`}>
+            {isPassing ? 'You’re on track to pass.' : `${700 - score} points short of the pass mark.`}
           </p>
-          <p className="mt-2 text-xs leading-relaxed text-slate-500">
-            Blends checked-off skills, question accuracy, labs, case studies and drills, weighted by the official
-            domain split (25–30% · 25–30% · 25–30% · 15–20%).
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
+            Built from your checked-off skills, question accuracy, labs, case studies and drills, weighted like the real
+            exam.
           </p>
-        </Card>
+        </div>
 
-        <div className="grid grid-cols-2 gap-4 lg:col-span-2">
-          {kpis.map((k) => (
-            <Card key={k.label} title={k.label}>
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-display text-3xl font-bold tabular-nums text-white">{k.value}</span>
+        <dl className="grid grid-cols-2 border-t border-slate-800 lg:border-l lg:border-t-0">
+          {kpis.map((k, i) => (
+            <div
+              key={k.label}
+              className={`min-w-0 p-5 sm:p-6 ${i % 2 === 1 ? 'border-l border-slate-800' : ''} ${i >= 2 ? 'border-t border-slate-800' : ''}`}
+            >
+              <dt className="text-sm text-slate-400">{k.label}</dt>
+              <dd className="mt-2 flex items-baseline gap-1.5">
+                <span className="font-display text-3xl font-extrabold tabular-nums text-white">{k.value}</span>
                 <span className="text-xs text-slate-500">{k.of}</span>
-              </div>
+              </dd>
               <div className="mt-3">
                 <Bar pct={k.pct} height="h-1.5" />
               </div>
-            </Card>
+            </div>
           ))}
-        </div>
+        </dl>
+      </section>
 
-        <Card
-          title="Next best step"
-          className="border-l-4 border-l-accent lg:col-span-2"
-          action={<span className="text-[11px] text-slate-500">weakest domain</span>}
-        >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="font-display text-xl font-semibold text-white">{weakest.title}</p>
-              <p className="mt-1 text-sm text-slate-400">
-                {analytics[weakest.id].masteryPct}% mastery · worth {weakest.weightRange} of the exam
-              </p>
-            </div>
-            <div className="flex shrink-0 flex-wrap gap-2">
-              <button
-                onClick={() => onNavigateTab('simulator', 'mcq', weakest.id)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-semibold text-on-accent hover:bg-accent-hover"
-              >
-                Practice it <ArrowRight className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => onNavigateTab('curriculum', undefined, weakest.id)}
-                className="rounded-lg border border-slate-700 px-3.5 py-2 text-sm font-medium text-slate-200 hover:border-slate-600"
-              >
-                Study modules
-              </button>
-            </div>
-          </div>
-        </Card>
-      </div>
+      {/* ===== Next step ===== */}
+      <section className="flex min-w-0 flex-col gap-4 rounded-xl bg-accent/10 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-sm text-slate-400">Your weakest area right now</p>
+          <p className="mt-0.5 font-display text-xl font-extrabold text-white">{weakest.title}</p>
+          <p className="mt-0.5 text-sm text-slate-400">
+            {analytics[weakest.id].masteryPct}% mastered, and it’s {weakest.weightRange} of the exam.
+          </p>
+        </div>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <button
+            onClick={() => onNavigateTab('simulator', 'mcq', weakest.id)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-bold text-on-accent hover:bg-accent-hover"
+          >
+            Practise it <ArrowRight className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => onNavigateTab('curriculum', undefined, weakest.id)}
+            className="rounded-lg border border-slate-700 bg-slate-900 px-3.5 py-2 text-sm font-semibold text-slate-200 hover:border-slate-600"
+          >
+            Read the modules
+          </button>
+        </div>
+      </section>
 
       {/* ===== Domain chart + labs ===== */}
       <div className="grid gap-4 xl:grid-cols-5">
         <Card
-          title="Mastery by exam domain"
+          title="Mastery by domain"
           className="xl:col-span-3"
           action={
             <span className="flex items-center gap-1.5 text-[11px] text-slate-500">
-              <span className="inline-block h-3 w-0.5 bg-slate-100" /> 70% target
+              <span className="inline-block h-3 w-0.5 bg-slate-100" /> 70% goal
             </span>
           }
         >
@@ -312,7 +313,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </Card>
 
-        <Card title="Labs" className="xl:col-span-2">
+        <Card title="Hands-on labs" className="xl:col-span-2">
           <ul className="-mx-2 divide-y divide-slate-800">
             {labs.map((l) => {
               const Icon = l.icon;
@@ -353,7 +354,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="flex items-start gap-3 text-sm text-slate-300">
           <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" />
           <p className="leading-relaxed">
-            <span className="font-semibold text-white">Exam-day strategy: </span>
+            <span className="font-bold text-white">Exam-day tip: </span>
             in case studies, read the questions before the exhibit tabs — it roughly halves reading time. You can’t
             return to a case study once you submit it, but you can flag regular questions for review.
           </p>

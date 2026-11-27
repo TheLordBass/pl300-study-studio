@@ -17,11 +17,11 @@
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
   /* Soft, friendly corners */
-  --radius-md: 0.55rem;
-  --radius-lg: 0.7rem;
-  --radius-xl: 0.95rem;
-  --radius-2xl: 1.15rem;
-  --radius-3xl: 1.4rem;
+  --radius-md: 0.4rem;
+  --radius-lg: 0.55rem;
+  --radius-xl: 0.8rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.25rem;
 
   /* Neutrals (dark: deep forest) */
   --color-white: #eef3ec;
@@ -169,17 +169,6 @@
   select:disabled {
     @apply cursor-not-allowed opacity-50;
   }
-}
-
-/* A soft highlighter stroke under a word */
-@utility marker {
-  background-image: linear-gradient(
-    color-mix(in oklab, var(--color-accent) 35%, transparent),
-    color-mix(in oklab, var(--color-accent) 35%, transparent)
-  );
-  background-repeat: no-repeat;
-  background-size: 100% 0.4em;
-  background-position: 0 90%;
 }
 
 @keyframes rise {

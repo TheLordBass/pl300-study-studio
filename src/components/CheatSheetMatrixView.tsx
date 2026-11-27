@@ -88,7 +88,10 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Section switcher */}
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+      <div
+        aria-label="Guide sections"
+        className="flex gap-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-1"
+      >
         {SECTIONS.map((s) => {
           const Icon = s.icon;
           const on = subMode === s.id;
@@ -97,21 +100,13 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
               key={s.id}
               onClick={() => onChangeSubMode(s.id)}
               aria-current={on ? 'page' : undefined}
-              className={`flex items-center gap-3 rounded-xl p-4 text-left transition ${
-                on ? 'bg-accent/15 text-white' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+              title={s.desc}
+              className={`flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-bold transition lg:flex-1 ${
+                on ? 'bg-accent text-on-accent' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
               }`}
             >
-              <span
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-                  on ? 'bg-accent text-on-accent' : 'bg-slate-950 text-accent-ink'
-                }`}
-              >
-                <Icon className="h-5 w-5" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm font-medium">{s.label}</span>
-                <span className="block truncate text-[11px] text-slate-400">{s.desc}</span>
-              </span>
+              <Icon className="h-4 w-4" />
+              {s.label}
             </button>
           );
         })}
@@ -194,7 +189,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
                   <button
                     key={opt}
                     onClick={() => handleAnswer(opt)}
-                    className={`flex items-center justify-between gap-2 rounded-2xl border p-4 text-left text-sm font-semibold transition ${cls}`}
+                    className={`flex items-center justify-between gap-2 rounded-xl border p-4 text-left text-sm font-semibold transition ${cls}`}
                   >
                     <span>{opt}</span>
                     {revealed && isCorrect && (
@@ -209,7 +204,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
             </div>
 
             {selectedOption !== null && (
-              <div className="space-y-3 rounded-2xl border border-slate-700 bg-slate-950 p-4 text-xs">
+              <div className="space-y-3 rounded-xl border border-slate-700 bg-slate-950 p-4 text-xs">
                 <p className="leading-relaxed text-slate-200">{activeDrill.explanation}</p>
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-amber-200">
@@ -220,9 +215,9 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
                   </div>
                   <button
                     onClick={handleNext}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-on-accent hover:bg-accent-hover"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-bold text-on-accent hover:bg-accent-hover"
                   >
-                    Next Scenario
+                    Next scenario
                     <ArrowRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
@@ -240,10 +235,10 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
             <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
               <div className="flex items-center gap-2">
                 <ShieldAlert className="h-5 w-5 text-violet-400" />
-                <h2 className="font-bold text-white">Power BI Workspace Roles & RLS Matrix</h2>
+                <h2 className="font-extrabold text-white">Workspace roles and RLS</h2>
               </div>
               <span className="text-xs text-amber-300 font-medium">
-                Only Viewer enforces RLS!
+                Only Viewer enforces RLS.
               </span>
             </div>
             <div className="overflow-x-auto">
@@ -276,7 +271,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
           <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
             <div className="flex items-center gap-2 border-b border-slate-800 px-5 py-4">
               <Table2 className="h-5 w-5 text-amber-400" />
-              <h2 className="font-bold text-white">Storage Modes Comparison (Import vs DirectQuery vs Dual)</h2>
+              <h2 className="font-extrabold text-white">Storage modes: Import, DirectQuery, Dual</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
@@ -306,14 +301,14 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
           <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
             <div className="flex items-center gap-2 border-b border-slate-800 px-5 py-4">
               <BookMarked className="h-5 w-5 text-sky-400" />
-              <h2 className="font-bold text-white">Essential DAX Filter Modifiers & Traps</h2>
+              <h2 className="font-extrabold text-white">Filter modifiers and their traps</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-950 text-slate-300">
                   <tr>
-                    <th className="px-4 py-3 font-semibold">DAX Function</th>
-                    <th className="px-4 py-3 font-semibold">What It Does</th>
+                    <th className="px-4 py-3 font-semibold">Function</th>
+                    <th className="px-4 py-3 font-semibold">What it does</th>
                     <th className="px-4 py-3 font-semibold text-amber-300">Exam Trap to Watch</th>
                   </tr>
                 </thead>

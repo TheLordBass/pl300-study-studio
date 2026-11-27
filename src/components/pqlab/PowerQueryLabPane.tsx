@@ -10,7 +10,6 @@ import {
   Lightbulb,
   ListChecks,
   RotateCcw,
-  Sparkles,
   Table2,
   X,
   XCircle,
@@ -101,7 +100,7 @@ const Ribbon: React.FC<{ tabs: Record<string, RibbonButton[]> }> = ({ tabs }) =>
     return () => document.removeEventListener('mousedown', close);
   }, []);
   return (
-    <div ref={ref} className="rounded-2xl bg-slate-900">
+    <div ref={ref} className="rounded-xl bg-slate-900">
       <div className="flex gap-1 border-b border-slate-800 px-2 pt-1.5">
         {names.map((n) => (
           <button
@@ -137,7 +136,7 @@ const Ribbon: React.FC<{ tabs: Record<string, RibbonButton[]> }> = ({ tabs }) =>
               {b.items && <ChevronDown className="h-3 w-3" />}
             </button>
             {open === b.label && b.items && (
-              <div className="absolute left-0 top-full z-30 mt-1 min-w-[190px] overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 py-1 shadow-xl">
+              <div className="absolute left-0 top-full z-30 mt-1 min-w-[190px] overflow-hidden rounded-xl border border-slate-800 bg-slate-900 py-1 shadow-xl">
                 {b.items.map((it) => (
                   <button
                     key={it.label}
@@ -179,7 +178,7 @@ const DataGrid: React.FC<{
     return { valid: (n - errs - empty) / n, err: errs / n, empty: empty / n, errs };
   });
   return (
-    <div className="overflow-auto rounded-2xl border border-slate-800 bg-slate-950" style={{ maxHeight: 420 }}>
+    <div className="overflow-auto rounded-xl border border-slate-800 bg-slate-950" style={{ maxHeight: 420 }}>
       <table className="w-full border-collapse text-[12px]">
         <thead className="sticky top-0 z-10 bg-slate-900">
           <tr>
@@ -213,7 +212,7 @@ const DataGrid: React.FC<{
                     <span className="bg-rose-400" style={{ width: `${quality[i].err * 100}%` }} />
                   </div>
                   {typeMenu === c && onType && (
-                    <div className="absolute left-0 top-full z-30 mt-1 min-w-[170px] overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 py-1 font-normal shadow-xl">
+                    <div className="absolute left-0 top-full z-30 mt-1 min-w-[170px] overflow-hidden rounded-xl border border-slate-800 bg-slate-900 py-1 font-normal shadow-xl">
                       {TYPES.map((t) => (
                         <button
                           key={t}
@@ -277,13 +276,13 @@ export const PowerQueryLabPane: React.FC<Props> = ({ completed, onComplete }) =>
   const [idx, setIdx] = useState(0);
   const scenario = PQ_SCENARIOS[idx];
   const picker = (
-    <div className="flex gap-2 overflow-x-auto pb-1">
+    <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
       {PQ_SCENARIOS.map((s, i) => (
         <button
           key={s.id}
           onClick={() => setIdx(i)}
-          className={`flex shrink-0 items-center gap-2 rounded-md px-3.5 py-2 text-xs font-medium transition ${
-            i === idx ? 'bg-accent text-on-accent' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+          className={`flex shrink-0 items-center gap-2 rounded-md px-3 py-1.5 text-xs font-semibold transition ${
+            i === idx ? 'border border-accent bg-accent text-on-accent' : 'border border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800'
           }`}
         >
           {completed.includes(s.id) && (
@@ -472,7 +471,7 @@ const ScenarioWorkspace: React.FC<{
         <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:col-span-3">
           <div className="flex flex-wrap items-center gap-2">
             <FileSpreadsheet className="h-5 w-5 text-accent-ink" />
-            <h2 className="text-lg font-medium text-white">{scenario.title}</h2>
+            <h2 className="text-lg font-extrabold text-white">{scenario.title}</h2>
             <span
               className={`rounded-md px-2.5 py-0.5 text-[11px] font-medium ${
                 scenario.difficulty === 'Exam Trap'
@@ -516,7 +515,7 @@ const ScenarioWorkspace: React.FC<{
         </div>
 
         <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:col-span-2">
-          <h3 className="flex items-center gap-2 text-sm font-medium text-white">
+          <h3 className="flex items-center gap-2 text-sm font-bold text-white">
             <ListChecks className="h-4 w-4 text-accent-ink" />
             The brief
           </h3>
@@ -528,7 +527,7 @@ const ScenarioWorkspace: React.FC<{
           {hintsShown > 0 && (
             <ul className="space-y-1.5">
               {scenario.hints.slice(0, hintsShown).map((h) => (
-                <li key={h} className="flex gap-2 rounded-2xl bg-amber-500/10 p-2.5 text-xs leading-relaxed text-amber-200">
+                <li key={h} className="flex gap-2 rounded-xl bg-amber-500/10 p-2.5 text-xs leading-relaxed text-amber-200">
                   <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-300" />
                   {h}
                 </li>
@@ -554,7 +553,7 @@ const ScenarioWorkspace: React.FC<{
       <div className="grid gap-4 xl:grid-cols-[180px_minmax(0,1fr)_240px]">
         {/* Queries */}
         <div className="rounded-xl border border-slate-800 bg-slate-900 p-3">
-          <div className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          <div className="mb-2 px-2 text-xs font-bold text-slate-400">
             Queries [{scenario.queries.length}]
           </div>
           <div className="flex gap-1 overflow-x-auto xl:flex-col">
@@ -580,12 +579,12 @@ const ScenarioWorkspace: React.FC<{
 
         {/* Formula bar + grid */}
         <div className="min-w-0 space-y-2">
-          <div className="flex items-start gap-2 rounded-2xl bg-slate-900 px-3 py-2 font-mono text-[11px] text-slate-300">
+          <div className="flex items-start gap-2 rounded-xl bg-slate-900 px-3 py-2 font-mono text-[11px] text-slate-300">
             <span className="italic text-slate-500">fx</span>
             <span className="min-w-0 flex-1 break-all">= {shown.m || '…'}</span>
           </div>
           {shown.error ? (
-            <div className="flex items-start gap-2 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-200">
+            <div className="flex items-start gap-2 rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-200">
               <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-400" />
               <div>
                 <div className="font-medium">This step has an error</div>
@@ -617,7 +616,7 @@ const ScenarioWorkspace: React.FC<{
 
         {/* Applied steps */}
         <div className="rounded-xl border border-slate-800 bg-slate-900 p-3">
-          <div className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Applied Steps</div>
+          <div className="mb-2 px-2 text-xs font-bold text-slate-400">Applied Steps</div>
           <ol className="space-y-0.5">
             {run.steps.map((s, i) => (
               <li key={i} className="group flex items-center gap-1">
@@ -675,7 +674,6 @@ const ScenarioWorkspace: React.FC<{
         </button>
         <div className="flex-1" />
         <button onClick={showSolution} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium text-slate-400 hover:bg-slate-800 hover:text-white">
-          <Sparkles className="h-3.5 w-3.5 text-amber-300" />
           Show solution
         </button>
         <button onClick={reset} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium text-slate-400 hover:bg-rose-500/10 hover:text-rose-300">
@@ -723,7 +721,7 @@ const ScenarioWorkspace: React.FC<{
           <div className="mb-2 text-xs text-slate-400">
             Advanced Editor — <span className="text-white">{active}</span> (read-only: the M your steps generate)
           </div>
-          <pre className="overflow-x-auto rounded-2xl bg-slate-950 p-4 font-mono text-[11px] leading-relaxed text-sky-200">
+          <pre className="overflow-x-auto rounded-xl bg-slate-950 p-4 font-mono text-[11px] leading-relaxed text-sky-200">
             {advancedEditorText(run)}
           </pre>
         </div>

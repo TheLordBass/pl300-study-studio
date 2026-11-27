@@ -33,7 +33,7 @@ interface DialogProps {
 }
 
 const input =
-  'w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-accent-ink focus:outline-none';
+  'w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-accent-ink focus:outline-none';
 const label = 'mb-1 block text-xs font-medium text-slate-400';
 
 const ColumnSelect: React.FC<{ value: string; columns: string[]; onChange: (v: string) => void }> = ({
@@ -476,7 +476,7 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
             <input value={newName} onChange={(e) => setNewName(e.target.value)} className={input} />
           </div>
           {clauses.map((c, i) => (
-            <div key={i} className="space-y-2 rounded-2xl border border-slate-800 p-3">
+            <div key={i} className="space-y-2 rounded-xl border border-slate-800 p-3">
               <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
                 {i === 0 ? 'If' : 'Else If'}
                 {clauses.length > 1 && (
@@ -554,7 +554,7 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
         onKeyDown={(e) => e.key === 'Escape' && onClose()}
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-white">{TITLES[kind]}</h3>
+          <h3 className="text-lg font-bold text-white">{TITLES[kind]}</h3>
           <button type="button" onClick={onClose} aria-label="Close" className="rounded-full p-1.5 text-slate-400 hover:bg-slate-800">
             <X className="h-4 w-4" />
           </button>

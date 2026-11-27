@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { AlertTriangle, Check, Copy, Search, Sparkles } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Check, Copy, Search } from 'lucide-react';
 import { DAX_CATEGORIES, DAX_ENTRIES, DAX_PATTERNS, DaxCategory } from '../../data/daxCheatSheet';
 
 const CopyButton: React.FC<{ text: string }> = ({ text }) => {
@@ -49,7 +49,7 @@ export const DaxCheatSheetView: React.FC<{ onPractise: () => void }> = ({ onPrac
     <div className="space-y-5">
       <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h2 className="text-lg font-medium text-white">DAX cheat sheet</h2>
+          <h2 className="text-lg font-extrabold text-white">DAX cheat sheet</h2>
           <p className="mt-0.5 text-sm text-slate-400">
             The functions PL-300 tests, with syntax, a real example and the trap to avoid.
           </p>
@@ -60,7 +60,7 @@ export const DaxCheatSheetView: React.FC<{ onPractise: () => void }> = ({ onPrac
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search: CALCULATE, running total, RLS…"
+              placeholder="Search functions"
               aria-label="Search DAX functions"
               className="w-full rounded-lg border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
             />
@@ -69,8 +69,8 @@ export const DaxCheatSheetView: React.FC<{ onPractise: () => void }> = ({ onPrac
             onClick={onPractise}
             className="inline-flex items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-medium text-on-accent hover:bg-accent-hover"
           >
-            <Sparkles className="h-4 w-4" />
             Practise in the DAX lab
+            <ArrowRight className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -91,13 +91,13 @@ export const DaxCheatSheetView: React.FC<{ onPractise: () => void }> = ({ onPrac
 
       {showPatterns && (
         <section>
-          <h3 className="mb-2 text-sm font-medium text-slate-400">Patterns worth memorising</h3>
+          <h3 className="mb-2 text-sm font-bold text-slate-400">Patterns worth memorising</h3>
           <div className="grid gap-3 lg:grid-cols-2">
             {patterns.map((p) => (
               <div key={p.title} className="min-w-0 rounded-xl border border-slate-800 bg-slate-900 p-4">
                 <div className="font-medium text-white">{p.title}</div>
                 <p className="mt-0.5 text-xs text-slate-400">{p.why}</p>
-                <div className="mt-2 flex items-start gap-1 rounded-2xl bg-slate-950 p-3">
+                <div className="mt-2 flex items-start gap-1 rounded-xl bg-slate-950 p-3">
                   <pre className="min-w-0 flex-1 overflow-x-auto font-mono text-[12px] leading-relaxed text-sky-200">{p.code}</pre>
                   <CopyButton text={p.code} />
                 </div>
@@ -109,7 +109,7 @@ export const DaxCheatSheetView: React.FC<{ onPractise: () => void }> = ({ onPrac
 
       {showEntries && (
         <section>
-          {cat === 'All' && <h3 className="mb-2 text-sm font-medium text-slate-400">Functions</h3>}
+          {cat === 'All' && <h3 className="mb-2 text-sm font-bold text-slate-400">Functions</h3>}
           {entries.length === 0 ? (
             <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 text-center text-sm text-slate-400">No functions match “{query}”.</div>
           ) : (
@@ -122,14 +122,14 @@ export const DaxCheatSheetView: React.FC<{ onPractise: () => void }> = ({ onPrac
                   </div>
                   <code className="block break-words font-mono text-[11px] text-slate-400">{e.syntax}</code>
                   <p className="text-sm leading-relaxed text-slate-300">{e.does}</p>
-                  <div className="flex items-start gap-1 rounded-2xl bg-slate-950 p-2.5">
+                  <div className="flex items-start gap-1 rounded-xl bg-slate-950 p-2.5">
                     <pre className="min-w-0 flex-1 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-sky-200">
                       {e.example}
                     </pre>
                     <CopyButton text={e.example} />
                   </div>
                   {e.trap && (
-                    <p className="flex gap-2 rounded-2xl bg-amber-500/10 p-2.5 text-xs leading-relaxed text-amber-200">
+                    <p className="flex gap-2 rounded-xl bg-amber-500/10 p-2.5 text-xs leading-relaxed text-amber-200">
                       <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-300" />
                       {e.trap}
                     </p>

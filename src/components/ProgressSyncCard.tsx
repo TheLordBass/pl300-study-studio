@@ -119,17 +119,17 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-sm font-bold text-white">
-            Cross-Device Backup & Cloud Sync
+            Backup and sync
           </h3>
           <p className="mt-0.5 text-xs text-slate-400">
-            Progress is saved automatically in this browser. Export a JSON backup or sync via a private GitHub Gist to switch between laptop and phone.
+            Progress saves in this browser. To move between laptop and phone, export a file or sync through a private GitHub Gist.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleExportJson}
-            className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-slate-500 hover:text-white"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-slate-500 hover:text-white"
           >
             <Download className="h-3.5 w-3.5 text-sky-400" />
             Export JSON
@@ -137,7 +137,7 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-slate-500 hover:text-white"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-slate-500 hover:text-white"
           >
             <Upload className="h-3.5 w-3.5 text-emerald-400" />
             Import JSON
@@ -159,13 +159,13 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
             }`}
           >
             <Cloud className="h-3.5 w-3.5" />
-            GitHub Gist Sync
+            Gist sync
           </button>
         </div>
       </div>
 
       {showCloudSync && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 space-y-3">
+        <div className="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-3">
           <div className="text-xs text-slate-300 leading-relaxed">
             Create a GitHub Personal Access Token with only the{' '}
             <code className="rounded bg-slate-800 px-1.5 py-0.5 text-amber-300">gist</code>{' '}
@@ -176,26 +176,26 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
           <div className="grid gap-3 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-[11px] font-medium text-slate-400">
-                GitHub Token (gist scope)
+                GitHub token (gist scope)
               </label>
               <input
                 type="password"
                 value={gistConfig.token}
                 onChange={(e) => updateGistField('token', e.target.value)}
                 placeholder="ghp_... or github_pat_..."
-                className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
               />
             </div>
             <div>
               <label className="mb-1 block text-[11px] font-medium text-slate-400">
-                Gist ID (leave blank on first save to auto-create)
+                Gist ID (leave blank the first time and one is created)
               </label>
               <input
                 type="text"
                 value={gistConfig.gistId}
                 onChange={(e) => updateGistField('gistId', e.target.value)}
                 placeholder="e.g. a1b2c3d4e5f6..."
-                className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-xs text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-xs text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
               />
             </div>
           </div>
@@ -204,26 +204,26 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
             <button
               disabled={syncBusy !== null}
               onClick={handlePushGist}
-              className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 text-xs font-bold text-on-accent transition hover:bg-accent-hover disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-xs font-bold text-on-accent transition hover:bg-accent-hover disabled:opacity-50"
             >
               {syncBusy === 'push' ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
                 <CloudUpload className="h-3.5 w-3.5" />
               )}
-              Save Progress to Gist
+              Save to Gist
             </button>
             <button
               disabled={syncBusy !== null}
               onClick={handlePullGist}
-              className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-900 px-3.5 py-2 text-xs font-semibold text-slate-200 transition hover:bg-slate-800 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3.5 py-2 text-xs font-semibold text-slate-200 transition hover:bg-slate-800 disabled:opacity-50"
             >
               {syncBusy === 'pull' ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
                 <CloudDownload className="h-3.5 w-3.5 text-sky-400" />
               )}
-              Pull Progress from Gist
+              Load from Gist
             </button>
           </div>
         </div>
@@ -231,7 +231,7 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
 
       {feedback && (
         <div
-          className={`flex items-center gap-2 rounded-2xl border px-3 py-2 text-xs ${
+          className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs ${
             feedback.type === 'ok'
               ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200'
               : 'border-rose-500/40 bg-rose-500/10 text-rose-200'

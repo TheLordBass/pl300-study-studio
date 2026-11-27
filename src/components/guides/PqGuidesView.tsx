@@ -32,9 +32,9 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
     <div className="space-y-5">
       <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h2 className="text-lg font-medium text-white">Power Query: how to do it, and where to find it</h2>
+          <h2 className="text-lg font-extrabold text-white">Power Query: how to do it, and where to find it</h2>
           <p className="mt-0.5 text-sm text-slate-400">
-            Step-by-step guides with a drawing of the Power BI Power Query Editor showing exactly what to click.
+            Each guide walks through the clicks on a drawing of the Power Query Editor.
           </p>
         </div>
         <div className="relative w-full lg:w-72">
@@ -42,7 +42,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search: unpivot, merge, errors…"
+            placeholder="Search guides"
             aria-label="Search Power Query guides"
             className="w-full rounded-lg border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
           />
@@ -57,7 +57,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
             if (!gs.length) return null;
             return (
               <div key={c} className="mb-3">
-                <div className="px-2 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">{c}</div>
+                <div className="px-2 pb-1 text-xs font-bold text-slate-500">{c}</div>
                 {gs.map((g) => (
                   <button
                     key={g.id}
@@ -79,8 +79,8 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
         {/* Guide */}
         <article id="pq-guide" className="min-w-0 scroll-mt-20 space-y-4">
           <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{guide.category}</div>
-            <h3 className="mt-0.5 text-xl font-medium text-white">{guide.title}</h3>
+            <div className="text-xs font-bold text-slate-500">{guide.category}</div>
+            <h3 className="mt-0.5 text-xl font-bold text-white">{guide.title}</h3>
             <p className="mt-1 text-sm leading-relaxed text-slate-300">{guide.summary}</p>
             <div className="mt-3 inline-flex flex-wrap items-center gap-1.5 rounded-md bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent-ink">
               <MapPin className="h-3.5 w-3.5" />
@@ -108,7 +108,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
                   <button
                     onClick={() => setStepIdx(i)}
                     aria-current={i === stepIdx ? 'step' : undefined}
-                    className={`flex w-full items-start gap-3 rounded-2xl p-3 text-left text-sm leading-relaxed transition ${
+                    className={`flex w-full items-start gap-3 rounded-xl p-3 text-left text-sm leading-relaxed transition ${
                       i === stepIdx ? 'bg-accent/10 text-white' : 'text-slate-300 hover:bg-slate-800'
                     }`}
                   >
@@ -152,7 +152,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
                   <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white">
                     <Code2 className="h-4 w-4 text-sky-300" /> The M it writes
                   </div>
-                  <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-2xl bg-slate-950 p-3 font-mono text-[11px] leading-relaxed text-sky-200">
+                  <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950 p-3 font-mono text-[11px] leading-relaxed text-sky-200">
                     {guide.m}
                   </pre>
                 </div>

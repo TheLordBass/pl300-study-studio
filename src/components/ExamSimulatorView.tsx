@@ -38,32 +38,32 @@ const SUB_TABS: {
 }[] = [
   {
     id: 'mcq',
-    label: 'Scenario MCQs',
-    desc: 'Study & Timed Mock Exam',
+    label: 'Practice questions',
+    desc: 'Study or timed exam',
     icon: CheckSquare,
   },
   {
     id: 'dax',
-    label: 'DAX Slot Builder',
-    desc: 'Drag/Click DAX Tokens',
+    label: 'DAX builder',
+    desc: 'Fill in the formula',
     icon: Code2,
   },
   {
     id: 'powerquery',
-    label: 'Power Query Sequencer',
-    desc: 'Step Order & Folding',
+    label: 'Step order',
+    desc: 'Power Query steps and folding',
     icon: FileSpreadsheet,
   },
   {
     id: 'pqlab',
-    label: 'Power Query Lab',
-    desc: '8 hands-on datasets',
+    label: 'Power Query lab',
+    desc: '8 messy datasets to clean',
     icon: Wrench,
   },
   {
     id: 'casestudy',
-    label: 'Case Study Simulator',
-    desc: '5-Tab Exhibits + Evidence',
+    label: 'Case studies',
+    desc: 'Read exhibits, answer questions',
     icon: Layers,
   },
 ];
@@ -94,7 +94,12 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
     <div className="space-y-6">
       {/* Sub-Navigation Cards */}
       {/* Phones: one scrolling row of compact modes. Desktop: five cards. */}
-      <div ref={row} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 xl:grid xl:grid-cols-5 xl:gap-3 xl:overflow-visible">
+      <div
+        ref={row}
+        role="tablist"
+        aria-label="Practice modes"
+        className="flex gap-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-1"
+      >
         {SUB_TABS.map((tab) => {
           const Icon = tab.icon;
           const active = activeSubTab === tab.id;
@@ -103,21 +108,13 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
               key={tab.id}
               onClick={() => onChangeSubTab(tab.id)}
               aria-current={active ? 'page' : undefined}
-              className={`flex shrink-0 items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition xl:shrink xl:p-4 ${
-                active
-                  ? 'border-accent bg-accent/15 text-white'
-                  : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700'
+              title={tab.desc}
+              className={`flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-bold transition lg:flex-1 ${
+                active ? 'bg-accent text-on-accent' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
               }`}
             >
-              <div
-                className={`rounded-lg p-2 ${active ? 'bg-accent text-on-accent' : 'bg-slate-950 text-slate-400'}`}
-              >
-                <Icon className="h-4 w-4 xl:h-5 xl:w-5" />
-              </div>
-              <div>
-                <div className="whitespace-nowrap text-sm font-semibold">{tab.label}</div>
-                <div className="hidden text-[11px] text-slate-400 xl:block">{tab.desc}</div>
-              </div>
+              <Icon className="h-4 w-4" />
+              {tab.label}
             </button>
           );
         })}

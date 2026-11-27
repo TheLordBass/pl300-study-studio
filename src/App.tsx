@@ -36,9 +36,9 @@ const NAV_ITEMS: {
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
   { id: 'dashboard', label: 'Home', short: 'Home', icon: LayoutDashboard },
-  { id: 'curriculum', label: 'Curriculum & Videos', short: 'Learn', icon: BookOpen },
-  { id: 'simulator', label: 'Exam Simulator', short: 'Exam', icon: Target },
-  { id: 'matrix', label: 'Cheat Sheets & Guides', short: 'Guides', icon: Flame },
+  { id: 'curriculum', label: 'Study plan', short: 'Study', icon: BookOpen },
+  { id: 'simulator', label: 'Practice', short: 'Practice', icon: Target },
+  { id: 'matrix', label: 'Guides & cheat sheets', short: 'Guides', icon: Flame },
   { id: 'flashcards', label: 'Flashcards', short: 'Cards', icon: Brain },
 ];
 
@@ -326,11 +326,15 @@ export function App() {
               <LogoMark />
               <span className="text-[17px] font-extrabold tracking-tight text-white">PL-300 Studio</span>
             </button>
-            <h2 className="hidden truncate text-lg font-extrabold text-white md:block">{activeItem.label}</h2>
+            <p className="hidden min-w-0 truncate text-sm md:block">
+              <span className="font-extrabold text-white">PL-300 Studio</span>
+              <span className="mx-2 text-slate-600">/</span>
+              <span className="font-semibold text-slate-400">{activeItem.label}</span>
+            </p>
 
             <div className="flex items-center gap-2">
               <div
-                className="flex items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-1.5"
+                className="flex items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-1.5 md:hidden"
                 title="Simulated readiness score — 700 is the pass mark"
               >
                 <span className="hidden text-xs font-semibold text-slate-400 sm:block">Readiness</span>

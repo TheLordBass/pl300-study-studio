@@ -101,25 +101,25 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
       <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-xl font-bold text-white sm:text-2xl">
-              Microsoft Learn Roadmap & Curated Video Hub
+            <h1 className="text-xl font-extrabold text-white sm:text-2xl">
+              Study plan
             </h1>
-            <p className="mt-1 text-xs text-slate-400">
-              Track official PL-300 skills measured, jot module notes, and jump straight to high-yield YouTube walkthroughs.
+            <p className="mt-1 text-sm text-slate-400">
+              Every skill the exam measures, grouped into Microsoft Learn modules, plus the videos worth your time.
             </p>
           </div>
-          <div className="flex items-center gap-3 text-xs">
-            <div className="rounded-2xl border border-slate-800 bg-slate-950 px-3 py-2">
-              <span className="text-slate-400">Skills Checked: </span>
-              <span className="font-bold text-emerald-400">
+          <div className="flex items-center gap-5 text-sm">
+            <div>
+              <span className="font-bold text-white">
                 {completedSkillsCount}/{totalSkillsCount}
               </span>
+              <span className="text-slate-400"> skills checked</span>
             </div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950 px-3 py-2">
-              <span className="text-slate-400">Videos Watched: </span>
-              <span className="font-bold text-rose-400">
+            <div>
+              <span className="font-bold text-white">
                 {progress.watchedVideos.length}/{VIDEO_RESOURCES.length}
               </span>
+              <span className="text-slate-400"> videos watched</span>
             </div>
           </div>
         </div>
@@ -136,18 +136,18 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               }`}
             >
               <BookOpen className="h-4 w-4" />
-              MS Learn Modules ({filteredModules.length})
+              Modules ({filteredModules.length})
             </button>
             <button
               onClick={() => setActiveSubSection('videos')}
               className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-xs font-semibold transition ${
                 activeSubSection === 'videos'
-                  ? 'bg-rose-400 text-slate-950'
+                  ? 'bg-accent text-on-accent'
                   : 'border border-slate-700 bg-slate-800/80 text-slate-300 hover:bg-slate-800'
               }`}
             >
               <Youtube className="h-4 w-4" />
-              Curated YouTube Hub ({filteredVideos.length})
+              Videos ({filteredVideos.length})
             </button>
           </div>
 
@@ -157,8 +157,8 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search skills, DAX, RLS, Query Folding..."
-              className="w-full rounded-2xl border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-xs text-slate-100 placeholder-slate-500 focus:border-accent-ink focus:outline-none"
+              placeholder="Search skills or topics"
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-xs text-slate-100 placeholder-slate-500 focus:border-accent-ink focus:outline-none"
             />
           </div>
         </div>
@@ -169,11 +169,11 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
             onClick={() => onChangeDomainFilter('all')}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
               selectedDomainFilter === 'all'
-                ? 'bg-slate-100 text-slate-950'
+                ? 'bg-accent text-on-accent'
                 : 'border border-slate-800 bg-slate-950 text-slate-400 hover:text-white'
             }`}
           >
-            All Domains (100%)
+            All domains
           </button>
           {PL300_DOMAINS.map((d) => (
             <button
@@ -181,7 +181,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               onClick={() => onChangeDomainFilter(d.id)}
               className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
                 selectedDomainFilter === d.id
-                  ? 'bg-accent/20 text-accent-ink border border-accent/50'
+                  ? 'bg-accent text-on-accent'
                   : 'border border-slate-800 bg-slate-950 text-slate-400 hover:text-white'
               }`}
             >
@@ -216,7 +216,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                   <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-md bg-slate-800 px-2 py-0.5 text-[11px] font-semibold text-amber-300">
+                        <span className="rounded-md bg-slate-800 px-2 py-0.5 text-[11px] font-semibold text-slate-300">
                           {domainMeta.shortTitle}
                         </span>
                         <span className="inline-flex items-center gap-1 text-[11px] text-slate-400">
@@ -230,10 +230,10 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                               : 'bg-slate-800 text-slate-300'
                           }`}
                         >
-                          {doneInMod}/{mod.skills.length} Skills Mastered
+                          {doneInMod}/{mod.skills.length} skills
                         </span>
                       </div>
-                      <h3 className="text-base font-semibold text-white">{mod.title}</h3>
+                      <h3 className="text-base font-bold text-white">{mod.title}</h3>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -241,14 +241,14 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                         href={mod.msLearnUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-2xl border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-xs font-medium text-sky-300 transition hover:bg-sky-500/20"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-slate-600"
                       >
-                        MS Learn Module
+                        Open on Learn
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                       <button
                         onClick={() => toggleExpand(mod.id)}
-                        className="inline-flex items-center gap-1 rounded-2xl border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-700"
+                        className="inline-flex items-center gap-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-700"
                       >
                         {isExpanded ? (
                           <>
@@ -264,26 +264,24 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                   </div>
 
                   {/* Skills Checklist (Always Visible) */}
-                  <div className="border-t border-slate-800/80 bg-slate-950/40 px-5 py-3">
-                    <div className="grid gap-2">
+                  <div className="border-t border-slate-800 px-3 py-2">
+                    <div className="grid">
                       {mod.skills.map((skill) => {
                         const checked = progress.completedSkills.includes(skill.id);
                         return (
                           <button
                             key={skill.id}
                             onClick={() => onToggleSkill(skill.id)}
-                            className={`flex items-start gap-2.5 rounded-2xl border px-3 py-2 text-left text-xs transition ${
-                              checked
-                                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-100'
-                                : 'border-slate-800/80 bg-slate-900/50 text-slate-300 hover:border-slate-700'
+                            className={`flex items-start gap-3 rounded-lg px-2 py-2 text-left text-sm transition hover:bg-slate-800/60 ${
+                              checked ? 'text-slate-400' : 'text-slate-200'
                             }`}
                           >
                             {checked ? (
-                              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent-ink" />
                             ) : (
                               <Circle className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
                             )}
-                            <span className={checked ? 'line-through decoration-emerald-500/50' : ''}>
+                            <span className={checked ? 'line-through decoration-slate-500' : ''}>
                               {skill.text}
                             </span>
                           </button>
@@ -296,10 +294,10 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                   {isExpanded && (
                     <div className="grid gap-4 border-t border-slate-800 bg-slate-950/70 p-5 lg:grid-cols-2">
                       <div className="space-y-3">
-                        <div className="rounded-2xl border border-amber-500/25 bg-amber-500/5 p-3.5">
-                          <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-amber-300">
+                        <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-3.5">
+                          <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-amber-300">
                             <AlertCircle className="h-4 w-4" />
-                            High-Yield Exam Traps
+                            Exam traps
                           </div>
                           <ul className="space-y-1.5 text-xs leading-relaxed text-slate-300">
                             {mod.examTraps.map((trap, i) => (
@@ -311,10 +309,10 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                           </ul>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-3.5">
-                          <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-sky-300">
+                        <div className="rounded-xl border border-slate-800 bg-slate-900 p-3.5">
+                          <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-sky-300">
                             <Code2 className="h-4 w-4" />
-                            Must-Know DAX / M Patterns
+                            Patterns to know
                           </div>
                           <div className="space-y-1.5">
                             {mod.keyDaxOrM.map((code, i) => (
@@ -330,11 +328,11 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                       </div>
 
                       {/* Personal Study Notes */}
-                      <div className="flex flex-col rounded-2xl border border-slate-800 bg-slate-900 p-3.5">
+                      <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-900 p-3.5">
                         <div className="mb-2 flex items-center justify-between">
-                          <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-300">
+                          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300">
                             <NotebookPen className="h-4 w-4 text-violet-400" />
-                            Your Personal Module Notes
+                            Your notes
                           </span>
                           <span className="text-[11px] text-slate-500">Auto-saved locally</span>
                         </div>
@@ -342,7 +340,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                           rows={6}
                           value={progress.moduleNotes[mod.id] ?? ''}
                           onChange={(e) => onUpdateModuleNote(mod.id, e.target.value)}
-                          placeholder="Write mnemonics, Power BI Desktop steps to practice, or tricky edge cases you missed..."
+                          placeholder="Mnemonics, steps to try in Power BI Desktop, things you got wrong…"
                           className="w-full flex-1 rounded-lg border border-slate-800 bg-slate-950 p-3 text-xs leading-relaxed text-slate-200 placeholder-slate-600 focus:border-violet-400 focus:outline-none"
                         />
                       </div>
@@ -388,7 +386,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               return (
                 <div
                   key={vid.id}
-                  className={`flex flex-col justify-between rounded-2xl border p-4 transition ${
+                  className={`flex flex-col justify-between rounded-xl border p-4 transition ${
                     watched
                       ? 'border-emerald-500/30 bg-emerald-500/5'
                       : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
@@ -401,7 +399,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                       </span>
                       <span className="text-slate-400">{vid.duration}</span>
                     </div>
-                    <h3 className="mt-2.5 text-sm font-semibold text-white leading-snug">
+                    <h3 className="mt-2.5 text-sm font-bold text-white leading-snug">
                       {vid.title}
                     </h3>
                     <p className="mt-2 text-xs leading-relaxed text-slate-400">{vid.summary}</p>
@@ -430,7 +428,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
                       }`}
                     >
                       <CheckCircle2 className="h-3.5 w-3.5" />
-                      {watched ? 'Watched' : 'Mark Watched'}
+                      {watched ? 'Watched' : 'Mark watched'}
                     </button>
 
                     <a

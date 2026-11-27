@@ -40,8 +40,8 @@ const GridTable: React.FC<{ grid: DaxGrid; title: string; wrong?: Set<string> }>
   wrong,
 }) => {
   return (
-    <div className="min-w-0 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
-      <div className="border-b border-slate-800 px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+    <div className="min-w-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+      <div className="border-b border-slate-800 px-3 py-2 text-xs font-bold text-slate-400">
         {title}
       </div>
       <div className="max-h-80 overflow-auto">
@@ -154,7 +154,7 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
     <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-950/40 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
+          <h3 className="flex items-center gap-2 text-sm font-bold text-white">
             <Database className="h-4 w-4 text-accent-ink" />
             Run it on sample data
           </h3>
@@ -182,7 +182,7 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
       </div>
 
       {mode === 'slots' ? (
-        <pre className="overflow-x-auto whitespace-pre-wrap rounded-2xl border border-slate-800 bg-slate-950 p-3 font-mono text-xs text-sky-200">
+        <pre className="overflow-x-auto whitespace-pre-wrap rounded-xl border border-slate-800 bg-slate-950 p-3 font-mono text-xs text-sky-200">
           {fromSlots}
         </pre>
       ) : (
@@ -202,7 +202,7 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
             spellCheck={false}
             rows={4}
             aria-label="DAX formula"
-            className="w-full rounded-2xl border border-slate-700 bg-slate-950 p-3 font-mono text-xs leading-relaxed text-sky-200 focus:border-accent-ink focus:outline-none"
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 p-3 font-mono text-xs leading-relaxed text-sky-200 focus:border-accent-ink focus:outline-none"
           />
           <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
             <span>Ctrl + Enter to run. Get it right here and the lab counts as done.</span>
@@ -250,7 +250,7 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
       </div>
 
       {showModel && (
-        <div className="space-y-3 rounded-2xl border border-slate-800 bg-slate-950 p-4 text-xs">
+        <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs">
           {!model ? (
             <div className="flex items-center gap-2 text-slate-400">
               <Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading the model…
@@ -309,7 +309,7 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
       )}
 
       {failure && (
-        <div className="flex items-start gap-2 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-200">
+        <div className="flex items-start gap-2 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-200">
           <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-400" />
           <span>
             The DAX engine couldn&apos;t start: {failure}. It needs an internet connection the first
@@ -321,7 +321,7 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
       {result && (
         <div className="space-y-3">
           <div
-            className={`flex items-start gap-2 rounded-2xl border p-3 text-xs ${
+            className={`flex items-start gap-2 rounded-xl border p-3 text-xs ${
               result.ok
                 ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200'
                 : 'border-rose-500/40 bg-rose-500/10 text-rose-200'

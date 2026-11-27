@@ -92,7 +92,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
               <button
                 key={cs.id}
                 onClick={() => setCsIdx(idx)}
-                className={`inline-flex items-center gap-2 rounded-2xl border px-3.5 py-2 text-xs font-semibold transition ${
+                className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-semibold transition ${
                   idx === csIdx
                     ? 'border-emerald-400 bg-emerald-500/15 text-white'
                     : 'border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700'
@@ -115,10 +115,10 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
             setHighlightedQuote(null);
             setQuestionIdx(0);
           }}
-          className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:text-white"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:text-white"
         >
           <RotateCcw className="h-3.5 w-3.5" />
-          Restart Case Study
+          Start over
         </button>
       </div>
 
@@ -131,7 +131,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
               <Layers className="h-4 w-4" />
               {caseStudy.industry}
             </div>
-            <h2 className="mt-1 text-base font-bold text-white">{caseStudy.companyName}</h2>
+            <h2 className="mt-1 text-base font-extrabold text-white">{caseStudy.companyName}</h2>
             <p className="mt-1 text-xs text-slate-400">{caseStudy.summary}</p>
           </div>
 
@@ -161,7 +161,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
           {/* Exhibit Body */}
           <div className="flex-1 space-y-2.5 p-4 text-xs">
             <div className="mb-1 flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-xs font-bold text-slate-400">
                 Exhibit: {activeExhibit.title}
               </span>
               {highlightedQuote && (
@@ -211,14 +211,14 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
 
               <button
                 onClick={handleHighlightEvidence}
-                className="inline-flex items-center gap-1.5 rounded-2xl border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent-ink transition hover:bg-accent/20"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent-ink transition hover:bg-accent/20"
               >
                 <Highlighter className="h-3.5 w-3.5" />
-                Highlight Evidence in Exhibit
+                Highlight evidence
               </button>
             </div>
 
-            <h3 className="text-sm font-semibold leading-relaxed text-white sm:text-base">
+            <h3 className="text-sm font-bold leading-relaxed text-white sm:text-base">
               {currentQ.question}
             </h3>
 
@@ -245,7 +245,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                   <button
                     key={idx}
                     onClick={() => handleChoose(idx)}
-                    className={`flex w-full items-start gap-2.5 rounded-2xl border p-3 text-left text-xs transition sm:text-sm ${style}`}
+                    className={`flex w-full items-start gap-2.5 rounded-xl border p-3 text-left text-xs transition sm:text-sm ${style}`}
                   >
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-current text-[11px] font-bold">
                       {String.fromCharCode(65 + idx)}
@@ -263,9 +263,9 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
             </div>
 
             {revealed[currentQ.id] && (
-              <div className="rounded-2xl border border-slate-700 bg-slate-950 p-4 text-xs">
-                <div className="font-bold uppercase tracking-wider text-emerald-400">
-                  Case Study Rationale
+              <div className="rounded-xl border border-slate-700 bg-slate-950 p-4 text-xs">
+                <div className="font-bold text-emerald-400">
+                  Why
                 </div>
                 <p className="mt-1 leading-relaxed text-slate-200">{currentQ.explanation}</p>
               </div>
@@ -279,9 +279,9 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                 setQuestionIdx((i) => Math.max(0, i - 1));
                 setHighlightedQuote(null);
               }}
-              className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-200 disabled:opacity-40"
+              className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-200 disabled:opacity-40"
             >
-              Previous Q
+              Previous
             </button>
             <button
               disabled={questionIdx >= caseStudy.questions.length - 1}
@@ -289,9 +289,9 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                 setQuestionIdx((i) => Math.min(caseStudy.questions.length - 1, i + 1));
                 setHighlightedQuote(null);
               }}
-              className="rounded-2xl bg-accent px-3.5 py-1.5 text-xs font-bold text-on-accent disabled:opacity-40"
+              className="rounded-lg bg-accent px-3.5 py-1.5 text-xs font-bold text-on-accent disabled:opacity-40"
             >
-              Next Q
+              Next
             </button>
           </div>
         </div>

@@ -341,7 +341,7 @@ export const PqEditorMock: React.FC<{ state: MockState; scene?: MockScene }> = (
 
   return (
     <div>
-    <div ref={wrap} className="w-full overflow-x-auto overflow-y-hidden rounded-2xl border border-slate-800">
+    <div ref={wrap} className="w-full overflow-x-auto overflow-y-hidden rounded-xl border border-slate-800">
       <div style={{ width: W * scale, height: H * scale }}>
       <div
         ref={canvas}
@@ -697,7 +697,8 @@ export const DesktopMock: React.FC<{ highlight?: string[]; badge?: number }> = (
     ['publish', 'Publish'],
   ];
   return (
-    <div className="pq-mock overflow-x-auto rounded-2xl border border-slate-800 text-[11px]" aria-hidden="true">
+    <div className="pq-mock overflow-x-auto rounded-xl border border-slate-800 text-[11px]" aria-hidden="true">
+      <div className="min-w-[720px]">
       <div className="pq-title flex h-7 items-center px-3 text-[12px]">Untitled - Power BI Desktop</div>
       <div className="pq-tabs flex h-7 items-end gap-0.5 px-2 text-[12px]">
         <span className="pq-file px-4 py-1">File</span>
@@ -708,7 +709,7 @@ export const DesktopMock: React.FC<{ highlight?: string[]; badge?: number }> = (
           </span>
         ))}
       </div>
-      <div className="pq-ribbon flex min-w-[980px] flex-wrap items-center gap-1 p-2">
+      <div className="pq-ribbon flex flex-wrap items-center gap-1 p-2">
         {items.map(([id, label]) => (
           <span key={id} className={`relative rounded px-2 py-2 ${hl.has(id) ? 'pq-hl' : ''}`}>
             {label}
@@ -716,7 +717,10 @@ export const DesktopMock: React.FC<{ highlight?: string[]; badge?: number }> = (
           </span>
         ))}
       </div>
-      <div className="pq-pane flex h-24 items-center justify-center text-[12px] pq-muted">Report canvas</div>
+      <div className="flex h-24 items-center justify-center text-[12px] pq-muted" style={{ background: '#faf9f8' }}>
+        Report canvas
+      </div>
+      </div>
     </div>
   );
 };
