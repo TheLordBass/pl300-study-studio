@@ -151,28 +151,28 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
   const wrong = new Set(result?.wrongRows ?? []);
 
   return (
-    <div className="space-y-4 rounded-3xl border border-slate-800 bg-slate-950/40 p-5">
+    <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-950/40 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
-            <Database className="h-4 w-4 text-accent" />
+            <Database className="h-4 w-4 text-accent-ink" />
             Run it on sample data
           </h3>
           <p className="mt-0.5 text-xs text-slate-400">
             Evaluated by the DAX engine from databites, running in your browser over a small
             Sales / Product / Customer / Date model.{' '}
-            <a href="#/matrix/dax" className="font-medium text-accent hover:underline">
+            <a href="#/matrix/dax" className="font-medium text-accent-ink hover:underline">
               DAX cheat sheet
             </a>
           </p>
         </div>
-        <div className="flex rounded-full bg-slate-900 p-1 text-xs font-medium">
+        <div className="flex rounded-lg border border-slate-800 bg-slate-900 p-1 text-xs font-medium">
           {(['slots', 'write'] as const).map((m) => (
             <button
               key={m}
               onClick={() => setMode(m)}
-              className={`rounded-full px-3 py-1.5 transition ${
-                mode === m ? 'bg-accent text-slate-950' : 'text-slate-300 hover:text-white'
+              className={`rounded-md px-3 py-1.5 transition ${
+                mode === m ? 'bg-accent text-on-accent' : 'text-slate-300 hover:text-white'
               }`}
             >
               {m === 'slots' ? 'Use my slots' : 'Write it myself'}
@@ -202,7 +202,7 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
             spellCheck={false}
             rows={4}
             aria-label="DAX formula"
-            className="w-full rounded-2xl border border-slate-700 bg-slate-950 p-3 font-mono text-xs leading-relaxed text-sky-200 focus:border-accent focus:outline-none"
+            className="w-full rounded-2xl border border-slate-700 bg-slate-950 p-3 font-mono text-xs leading-relaxed text-sky-200 focus:border-accent-ink focus:outline-none"
           />
           <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
             <span>Ctrl + Enter to run. Get it right here and the lab counts as done.</span>
@@ -225,14 +225,14 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
         <button
           onClick={run}
           disabled={!canRun}
-          className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-bold text-slate-950 transition hover:bg-accent-hover disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-xs font-bold text-on-accent transition hover:bg-accent-hover disabled:opacity-40"
         >
           {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
           {firstRun && !busy ? 'Load engine & run' : 'Run'}
         </button>
         <button
           onClick={toggleModel}
-          className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 px-3 py-2 text-xs font-medium text-slate-300 transition hover:bg-slate-800"
+          className="inline-flex items-center gap-1.5 rounded-md border border-slate-700 px-3 py-2 text-xs font-medium text-slate-300 transition hover:bg-slate-800"
         >
           <Table2 className="h-3.5 w-3.5" />
           Model

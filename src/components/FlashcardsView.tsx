@@ -117,7 +117,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Header & Deck Controls */}
-      <div className="flex flex-col gap-4 rounded-3xl bg-slate-900 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-slate-800 bg-slate-900 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-white sm:text-2xl">
             Spaced-Repetition Flashcards
@@ -138,7 +138,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
           </span>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 font-bold text-slate-950 hover:bg-accent-hover"
+            className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 font-bold text-on-accent hover:bg-accent-hover"
           >
             <Plus className="h-4 w-4" />
             Add Custom Card
@@ -153,7 +153,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
             setFilterMode('all');
             setCardIdx(0);
           }}
-          className={`rounded-full px-3.5 py-2 text-xs font-semibold transition ${
+          className={`rounded-md px-3.5 py-2 text-xs font-semibold transition ${
             filterMode === 'all'
               ? 'bg-slate-100 text-slate-950'
               : 'border border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800'
@@ -166,9 +166,9 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
             setFilterMode('review');
             setCardIdx(0);
           }}
-          className={`rounded-full px-3.5 py-2 text-xs font-semibold transition ${
+          className={`rounded-md px-3.5 py-2 text-xs font-semibold transition ${
             filterMode === 'review'
-              ? 'bg-accent text-slate-950'
+              ? 'bg-accent text-on-accent'
               : 'border border-slate-800 bg-slate-900 text-amber-300 hover:bg-slate-800'
           }`}
         >
@@ -181,7 +181,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               setFilterMode(d.id);
               setCardIdx(0);
             }}
-            className={`rounded-full px-3 py-2 text-xs font-medium transition ${
+            className={`rounded-md px-3 py-2 text-xs font-medium transition ${
               filterMode === d.id
                 ? 'border border-sky-400 bg-sky-500/15 text-sky-200'
                 : 'border border-slate-800 bg-slate-900 text-slate-400 hover:text-white'
@@ -234,10 +234,10 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
           {/* Interactive Card */}
           <div
             onClick={() => setFlipped((f) => !f)}
-            className="min-h-[290px] cursor-pointer rounded-[28px] border border-slate-800 bg-slate-900 p-7 shadow-xl transition hover:border-accent/50 flex flex-col justify-between"
+            className="min-h-[290px] cursor-pointer rounded-xl border border-slate-800 bg-slate-900 p-7 shadow-xl transition hover:border-accent/50 flex flex-col justify-between"
           >
             <div className="flex items-center justify-between">
-              <span className="rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
+              <span className="rounded-md border border-slate-700 bg-slate-800/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
                 {flipped ? 'Answer & Rationale' : 'Question / Prompt'}
               </span>
               <span className="inline-flex items-center gap-1 text-xs text-slate-400">
@@ -418,7 +418,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               </button>
               <button
                 type="submit"
-                className="rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-slate-950 hover:bg-accent-hover"
+                className="rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-on-accent hover:bg-accent-hover"
               >
                 Save Flashcard
               </button>

@@ -129,7 +129,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
   return (
     <div className="grid gap-4 lg:grid-cols-12">
       {/* Challenge List */}
-      <div className="lg:col-span-4 space-y-2 rounded-3xl bg-slate-900 p-4">
+      <div className="lg:col-span-4 space-y-2 rounded-xl border border-slate-800 bg-slate-900 p-4">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
             Power Query Scenarios
@@ -163,7 +163,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
       </div>
 
       {/* Interactive Sequencer */}
-      <div className="lg:col-span-8 rounded-3xl bg-slate-900 p-6 space-y-5">
+      <div className="lg:col-span-8 rounded-xl border border-slate-800 bg-slate-900 p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <FileSpreadsheet className="h-5 w-5 text-amber-400" />
@@ -314,7 +314,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
             <button
               disabled={selectedIds.length !== challenge.correctStepOrder.length}
               onClick={validateSequence}
-              className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-slate-950 transition hover:bg-accent-hover disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-on-accent transition hover:bg-accent-hover disabled:opacity-40"
             >
               Verify Step Order
               <ArrowRight className="h-3.5 w-3.5" />

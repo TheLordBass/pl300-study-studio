@@ -33,7 +33,7 @@ interface DialogProps {
 }
 
 const input =
-  'w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none';
+  'w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-accent-ink focus:outline-none';
 const label = 'mb-1 block text-xs font-medium text-slate-400';
 
 const ColumnSelect: React.FC<{ value: string; columns: string[]; onChange: (v: string) => void }> = ({
@@ -254,7 +254,7 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
               ] as const
             ).map(([v, l]) => (
               <label key={v} className="flex items-center gap-2">
-                <input type="radio" checked={at === v} onChange={() => setAt(v)} className="accent-[var(--color-accent)]" />
+                <input type="radio" checked={at === v} onChange={() => setAt(v)} className="accent-[var(--color-accent-ink)]" />
                 {l}
               </label>
             ))}
@@ -328,7 +328,7 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
             <button
               type="button"
               onClick={() => setAggs([...aggs, { name: '', fn: 'sum', column: cols[0] ?? '' }])}
-              className="inline-flex items-center gap-1 text-xs font-medium text-accent"
+              className="inline-flex items-center gap-1 text-xs font-medium text-accent-ink"
             >
               <Plus className="h-3.5 w-3.5" /> Add aggregation
             </button>
@@ -390,14 +390,14 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
                         type="checkbox"
                         checked={expand.includes(c)}
                         onChange={(e) => setExpand(e.target.checked ? [...expand, c] : expand.filter((x) => x !== c))}
-                        className="accent-[var(--color-accent)]"
+                        className="accent-[var(--color-accent-ink)]"
                       />
                       {c}
                     </label>
                   ))}
               </div>
               <label className="mt-2 flex items-center gap-2 text-xs text-slate-400">
-                <input type="checkbox" checked={prefix} onChange={(e) => setPrefix(e.target.checked)} className="accent-[var(--color-accent)]" />
+                <input type="checkbox" checked={prefix} onChange={(e) => setPrefix(e.target.checked)} className="accent-[var(--color-accent-ink)]" />
                 Use original column name as prefix
               </label>
             </div>
@@ -417,7 +417,7 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
                 type="checkbox"
                 checked={appendList.includes(q.name)}
                 onChange={(e) => setAppendList(e.target.checked ? [...appendList, q.name] : appendList.filter((x) => x !== q.name))}
-                className="accent-[var(--color-accent)]"
+                className="accent-[var(--color-accent-ink)]"
               />
               {q.name}
             </label>
@@ -455,7 +455,7 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
                   type="button"
                   key={c}
                   onClick={() => setFormula((f) => `${f}[${c}]`)}
-                  className="rounded-full bg-slate-800 px-2 py-0.5 font-mono text-[11px] text-slate-200 hover:bg-slate-700"
+                  className="rounded-md bg-slate-800 px-2 py-0.5 font-mono text-[11px] text-slate-200 hover:bg-slate-700"
                 >
                   [{c}]
                 </button>
@@ -506,7 +506,7 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
           <button
             type="button"
             onClick={() => setClauses([...clauses, { column: clauses[clauses.length - 1].column, test: 'greaterOrEqual', value: '', output: '' }])}
-            className="inline-flex items-center gap-1 text-xs font-medium text-accent"
+            className="inline-flex items-center gap-1 text-xs font-medium text-accent-ink"
           >
             <Plus className="h-3.5 w-3.5" /> Add Clause
           </button>
@@ -550,7 +550,7 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
         onSubmit={submit}
         role="dialog"
         aria-label={TITLES[kind]}
-        className="max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-t-[28px] bg-slate-900 p-6 shadow-2xl sm:rounded-[28px]"
+        className="max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-t-xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:rounded-xl"
         onKeyDown={(e) => e.key === 'Escape' && onClose()}
       >
         <div className="flex items-center justify-between">
@@ -562,10 +562,10 @@ export const PqDialog: React.FC<DialogProps> = ({ kind, table, selected, otherQu
         {body}
         {problem && <p className="text-xs text-rose-300">{problem}</p>}
         <div className="flex justify-end gap-2 pt-1">
-          <button type="button" onClick={onClose} className="rounded-full px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">
+          <button type="button" onClick={onClose} className="rounded-md px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">
             Cancel
           </button>
-          <button type="submit" className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-slate-950 hover:bg-accent-hover">
+          <button type="submit" className="rounded-md bg-accent px-5 py-2 text-sm font-medium text-on-accent hover:bg-accent-hover">
             OK
           </button>
         </div>

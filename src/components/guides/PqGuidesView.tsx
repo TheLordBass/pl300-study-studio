@@ -30,7 +30,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-3 rounded-3xl bg-slate-900 p-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="text-lg font-medium text-white">Power Query: how to do it, and where to find it</h2>
           <p className="mt-0.5 text-sm text-slate-400">
@@ -44,14 +44,14 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search: unpivot, merge, errors…"
             aria-label="Search Power Query guides"
-            className="w-full rounded-full border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:border-accent focus:outline-none"
+            className="w-full rounded-lg border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
           />
         </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
         {/* Guide list */}
-        <nav aria-label="Guides" className="max-h-[340px] overflow-y-auto rounded-3xl bg-slate-900 p-3 lg:max-h-[calc(100vh-160px)] lg:sticky lg:top-20">
+        <nav aria-label="Guides" className="max-h-[340px] overflow-y-auto rounded-xl border border-slate-800 bg-slate-900 p-3 lg:max-h-[calc(100vh-160px)] lg:sticky lg:top-20">
           {GUIDE_CATEGORIES.map((c) => {
             const gs = filtered.filter((g) => g.category === c);
             if (!gs.length) return null;
@@ -63,8 +63,8 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
                     key={g.id}
                     onClick={() => pick(g.id)}
                     aria-current={g.id === guide.id ? 'true' : undefined}
-                    className={`block w-full rounded-full px-3 py-1.5 text-left text-sm transition ${
-                      g.id === guide.id ? 'bg-accent/15 text-accent' : 'text-slate-300 hover:bg-slate-800'
+                    className={`block w-full rounded-md px-3 py-1.5 text-left text-sm transition ${
+                      g.id === guide.id ? 'bg-accent/15 text-accent-ink' : 'text-slate-300 hover:bg-slate-800'
                     }`}
                   >
                     {g.title}
@@ -78,11 +78,11 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
 
         {/* Guide */}
         <article id="pq-guide" className="min-w-0 scroll-mt-20 space-y-4">
-          <div className="rounded-3xl bg-slate-900 p-5">
+          <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
             <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{guide.category}</div>
             <h3 className="mt-0.5 text-xl font-medium text-white">{guide.title}</h3>
             <p className="mt-1 text-sm leading-relaxed text-slate-300">{guide.summary}</p>
-            <div className="mt-3 inline-flex flex-wrap items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent">
+            <div className="mt-3 inline-flex flex-wrap items-center gap-1.5 rounded-md bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent-ink">
               <MapPin className="h-3.5 w-3.5" />
               {guide.where}
             </div>
@@ -101,7 +101,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
           </div>
 
           {/* Steps */}
-          <div className="rounded-3xl bg-slate-900 p-5">
+          <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
             <ol className="space-y-2">
               {guide.steps.map((s, i) => (
                 <li key={i}>
@@ -114,7 +114,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
                   >
                     <span
                       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                        i === stepIdx ? 'bg-accent text-slate-950' : 'bg-slate-800 text-slate-300'
+                        i === stepIdx ? 'bg-accent text-on-accent' : 'bg-slate-800 text-slate-300'
                       }`}
                     >
                       {i + 1}
@@ -128,7 +128,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
               <button
                 disabled={stepIdx === 0}
                 onClick={() => setStepIdx((i) => i - 1)}
-                className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 disabled:opacity-30"
+                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 disabled:opacity-30"
               >
                 <ArrowLeft className="h-4 w-4" /> Previous
               </button>
@@ -138,7 +138,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
               <button
                 disabled={stepIdx >= guide.steps.length - 1}
                 onClick={() => setStepIdx((i) => i + 1)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-medium text-slate-950 hover:bg-accent-hover disabled:opacity-30"
+                className="inline-flex items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-medium text-on-accent hover:bg-accent-hover disabled:opacity-30"
               >
                 Next <ArrowRight className="h-4 w-4" />
               </button>
@@ -148,7 +148,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
           {(guide.m || guide.tips?.length || guide.lab) && (
             <div className="grid gap-4 md:grid-cols-2">
               {guide.m && (
-                <div className="rounded-3xl bg-slate-900 p-5">
+                <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
                   <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white">
                     <Code2 className="h-4 w-4 text-sky-300" /> The M it writes
                   </div>
@@ -158,7 +158,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
                 </div>
               )}
               {(guide.tips?.length || guide.lab) && (
-                <div className="space-y-2 rounded-3xl bg-slate-900 p-5">
+                <div className="space-y-2 rounded-xl border border-slate-800 bg-slate-900 p-5">
                   {guide.tips?.map((t) => (
                     <p key={t} className="flex gap-2 text-sm leading-relaxed text-slate-300">
                       <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
@@ -168,9 +168,9 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
                   {guide.lab && (
                     <button
                       onClick={onOpenLab}
-                      className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
+                      className="mt-1 inline-flex items-center gap-1.5 rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
                     >
-                      <FlaskConical className="h-4 w-4 text-accent" />
+                      <FlaskConical className="h-4 w-4 text-accent-ink" />
                       Practise it in the Power Query Lab
                     </button>
                   )}

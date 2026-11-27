@@ -127,14 +127,14 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
   return (
     <div className="space-y-4">
       {/* Filter & Mode Toolbar */}
-      <div className="flex flex-col gap-3 rounded-3xl bg-slate-900 p-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-2">
           <select
             disabled={examRunning}
             title={examRunning ? 'Finish the timed exam to change filters' : undefined}
             value={domainFilter}
             onChange={(e) => onChangeDomainFilter(e.target.value as DomainId | 'all')}
-            className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent focus:outline-none"
+            className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent-ink focus:outline-none"
           >
             <option value="all">All Domains ({MCQ_QUESTIONS.length} Qs)</option>
             {PL300_DOMAINS.map((d) => (
@@ -150,7 +150,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             onChange={(e) =>
               setDifficultyFilter(e.target.value as 'All' | MCQQuestion['difficulty'])
             }
-            className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent focus:outline-none"
+            className="rounded-2xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-accent-ink focus:outline-none"
           >
             <option value="All">All Difficulties</option>
             <option value="Core">Core</option>
@@ -168,9 +168,9 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
               setSelectedOptions({});
               setRevealedIds({});
             }}
-            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+            className={`rounded-md px-3 py-1.5 text-xs font-semibold transition ${
               mode === 'study'
-                ? 'bg-accent text-slate-950'
+                ? 'bg-accent text-on-accent'
                 : 'border border-slate-700 bg-slate-950 text-slate-300 hover:bg-slate-800'
             }`}
           >
@@ -178,7 +178,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           </button>
           <button
             onClick={startTimedMode}
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition ${
               mode === 'timed'
                 ? 'bg-sky-400 text-slate-950'
                 : 'border border-slate-700 bg-slate-950 text-slate-300 hover:bg-slate-800'
@@ -233,13 +233,13 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
       )}
 
       {!currentQ ? (
-        <div className="rounded-3xl bg-slate-900 p-8 text-center text-sm text-slate-400">
+        <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 text-center text-sm text-slate-400">
           No questions match the selected filters.
         </div>
       ) : (
         <div className="grid gap-4 lg:grid-cols-12">
           {/* Question Navigator Rail */}
-          <div className="lg:col-span-3 rounded-3xl bg-slate-900 p-4">
+          <div className="lg:col-span-3 rounded-xl border border-slate-800 bg-slate-900 p-4">
             <div className="mb-3 flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-300">Question Map</span>
               <span className="text-slate-400">
@@ -288,7 +288,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
             {mode === 'timed' && !examSubmitted && (
               <button
                 onClick={handleSubmitTimedExam}
-                className="mt-4 w-full rounded-2xl bg-accent py-2.5 text-xs font-bold text-slate-950 transition hover:bg-accent-hover"
+                className="mt-4 w-full rounded-2xl bg-accent py-2.5 text-xs font-bold text-on-accent transition hover:bg-accent-hover"
               >
                 Finish & Grade Exam ({Object.keys(selectedOptions).length}/{filteredQuestions.length})
               </button>
@@ -296,7 +296,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           </div>
 
           {/* Active Question Card */}
-          <div className="lg:col-span-9 rounded-3xl bg-slate-900 p-6 space-y-5">
+          <div className="lg:col-span-9 rounded-xl border border-slate-800 bg-slate-900 p-6 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-md bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-amber-300">
@@ -324,7 +324,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                 }
                 className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
                   flaggedIds[currentQ.id]
-                    ? 'border-accent/50 bg-accent/15 text-accent'
+                    ? 'border-accent/50 bg-accent/15 text-accent-ink'
                     : 'border-slate-700 bg-slate-950 text-slate-400 hover:text-white'
                 }`}
               >
@@ -439,7 +439,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
                 onClick={() =>
                   setCurrentIdx((i) => Math.min(filteredQuestions.length - 1, i + 1))
                 }
-                className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 text-xs font-semibold text-slate-950 disabled:opacity-40 hover:bg-accent-hover"
+                className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 text-xs font-semibold text-on-accent disabled:opacity-40 hover:bg-accent-hover"
               >
                 Next
                 <ArrowRight className="h-3.5 w-3.5" />

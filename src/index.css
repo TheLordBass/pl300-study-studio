@@ -1,121 +1,135 @@
 @import "tailwindcss";
 
 /*
- * Gemini-inspired theme.
+ * "Study garden" theme: forest green and cream, with a rounded, friendly type.
  *
- * Components keep using Tailwind's slate / amber / sky / emerald / rose / violet
- * utilities; this file re-points those palettes at Gemini's neutral greys and
- * Google's brand hues, and flips them for light mode via [data-theme="light"].
- * `accent` is the interactive colour (buttons, active states, focus rings).
+ * Components use Tailwind's slate / amber / sky / emerald / rose / violet
+ * utilities; this file re-points those palettes at the theme's own neutrals
+ * and muted hues, and flips them for light mode via [data-theme="light"].
+ *
+ *   accent        green fill (buttons, active markers, progress)
+ *   on-accent     text on an accent fill
+ *   accent-ink    accent-coloured text and icons that must stay readable
  */
 @theme {
-  --font-sans: "Google Sans Flex", "Google Sans", "Inter", ui-sans-serif, system-ui,
-    -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Google Sans Code", "JetBrains Mono", "Fira Code", Consolas, monospace;
+  --font-sans: "Nunito", ui-rounded, "SF Pro Rounded", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Nunito", ui-rounded, "SF Pro Rounded", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
-  /* Neutrals (dark default) */
-  --color-white: #f1f3f4;
-  --color-slate-100: #f1f3f4;
-  --color-slate-200: #e3e3e3;
-  --color-slate-300: #c4c7c5;
-  --color-slate-400: #9aa0a6;
-  --color-slate-500: #80868b;
-  --color-slate-600: #5f6368;
-  --color-slate-700: #3c4043;
-  --color-slate-800: #2a2b2e;
-  --color-slate-900: #1e1f20;
-  --color-slate-950: #131314;
+  /* Soft, friendly corners */
+  --radius-md: 0.55rem;
+  --radius-lg: 0.7rem;
+  --radius-xl: 0.95rem;
+  --radius-2xl: 1.15rem;
+  --radius-3xl: 1.4rem;
 
-  /* Interactive accent */
-  --color-accent: #a8c7fa;
-  --color-accent-hover: #c2d7fb;
-  --color-accent-strong: #4285f4;
+  /* Neutrals (dark: deep forest) */
+  --color-white: #eef3ec;
+  --color-slate-100: #e8eee6;
+  --color-slate-200: #d5dfd6;
+  --color-slate-300: #b9c7bd;
+  --color-slate-400: #95a69b;
+  --color-slate-500: #73857a;
+  --color-slate-600: #536359;
+  --color-slate-700: #36463c;
+  --color-slate-800: #25332a;
+  --color-slate-900: #172119;
+  --color-slate-950: #0f1712;
 
-  /* Google hues, dark-mode tuned */
-  --color-sky-200: #d3e3fd;
-  --color-sky-300: #a8c7fa;
-  --color-sky-400: #7cacf8;
-  --color-sky-500: #4285f4;
+  /* Accent: sage in the dark */
+  --color-accent: #8fd0a8;
+  --color-accent-hover: #a7dcbb;
+  --color-on-accent: #0e2418;
+  --color-accent-ink: #9fd9b5;
 
-  --color-emerald-100: #e6f4ea;
-  --color-emerald-200: #c4eed0;
-  --color-emerald-300: #6dd58c;
-  --color-emerald-400: #37be5f;
-  --color-emerald-500: #1e8e3e;
+  /* Muted hues, dark-mode tuned */
+  --color-sky-200: #cfe2ee;
+  --color-sky-300: #a3c8df;
+  --color-sky-400: #72a9cc;
+  --color-sky-500: #3f7fa8;
 
-  --color-rose-100: #fce8e6;
-  --color-rose-200: #f9dedc;
-  --color-rose-300: #f2b8b5;
-  --color-rose-400: #f28b82;
-  --color-rose-500: #ea4335;
+  --color-emerald-100: #dcf1e3;
+  --color-emerald-200: #bde5c9;
+  --color-emerald-300: #86d19f;
+  --color-emerald-400: #57b97a;
+  --color-emerald-500: #2f8f55;
 
-  --color-amber-200: #feefc3;
-  --color-amber-300: #fdd663;
-  --color-amber-400: #fbbc04;
-  --color-amber-500: #f9ab00;
+  --color-rose-100: #f9e1dc;
+  --color-rose-200: #f2c6bd;
+  --color-rose-300: #e9a091;
+  --color-rose-400: #dc7a68;
+  --color-rose-500: #bb4a36;
 
-  --color-violet-200: #e9d2fd;
-  --color-violet-300: #d7aefb;
-  --color-violet-400: #c58af9;
-  --color-violet-500: #a142f4;
+  --color-amber-200: #f3e3b8;
+  --color-amber-300: #e8cc82;
+  --color-amber-400: #d9b155;
+  --color-amber-500: #b98f2a;
 
-  --color-teal-400: #4ecde6;
+  --color-violet-200: #e0d9f0;
+  --color-violet-300: #c3b5e3;
+  --color-violet-400: #a291d3;
+  --color-violet-500: #7865b5;
 
-  --animate-gemini-spin: gemini-spin 8s linear infinite;
-  --animate-rise: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --color-teal-400: #63c2b4;
+
+  --animate-rise: rise 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --color-white: #1f1f1f;
-  --color-slate-100: #1f1f1f;
-  --color-slate-200: #2d2e30;
-  --color-slate-300: #444746;
-  --color-slate-400: #5e6063;
-  --color-slate-500: #747775;
-  --color-slate-600: #9aa0a6;
-  --color-slate-700: #c4c7c5;
-  --color-slate-800: #dde3ea;
-  --color-slate-900: #eef2f8;
-  --color-slate-950: #ffffff;
+  /* Cream page, warm white cards, green-tinted ink */
+  --color-white: #1c2a21;
+  --color-slate-100: #1c2a21;
+  --color-slate-200: #2c3b31;
+  --color-slate-300: #415246;
+  --color-slate-400: #5d6e62;
+  --color-slate-500: #7a8a7e;
+  --color-slate-600: #a3afa5;
+  --color-slate-700: #d2d6c8;
+  --color-slate-800: #e7e3d4;
+  --color-slate-900: #fffdf7;
+  --color-slate-950: #f5f1e4;
 
-  --color-accent: #0b57d0;
-  --color-accent-hover: #0842a0;
-  --color-accent-strong: #0b57d0;
+  --color-accent: #2f6b4f;
+  --color-accent-hover: #255a41;
+  --color-on-accent: #fffdf7;
+  --color-accent-ink: #2a6448;
 
-  --color-sky-200: #0842a0;
-  --color-sky-300: #0b57d0;
-  --color-sky-400: #1a73e8;
-  --color-sky-500: #4285f4;
+  --color-sky-200: #173f59;
+  --color-sky-300: #1f5272;
+  --color-sky-400: #2b6589;
+  --color-sky-500: #3f7fa8;
 
-  --color-emerald-100: #0d652d;
-  --color-emerald-200: #0d652d;
-  --color-emerald-300: #137333;
-  --color-emerald-400: #188038;
-  --color-emerald-500: #1e8e3e;
+  --color-emerald-100: #12452a;
+  --color-emerald-200: #12452a;
+  --color-emerald-300: #1a5d39;
+  --color-emerald-400: #237347;
+  --color-emerald-500: #2f8f55;
 
-  --color-rose-100: #8c1d18;
-  --color-rose-200: #a50e0e;
-  --color-rose-300: #b3261e;
-  --color-rose-400: #d93025;
-  --color-rose-500: #ea4335;
+  --color-rose-100: #6b2015;
+  --color-rose-200: #6b2015;
+  --color-rose-300: #8a2d1d;
+  --color-rose-400: #a93a26;
+  --color-rose-500: #bb4a36;
 
-  --color-amber-200: #7a4100;
-  --color-amber-300: #8f4f00;
-  --color-amber-400: #b06000;
-  --color-amber-500: #f9ab00;
+  --color-amber-200: #5a4100;
+  --color-amber-300: #6b4f05;
+  --color-amber-400: #85630c;
+  --color-amber-500: #b98f2a;
 
-  --color-violet-200: #5b1e9c;
-  --color-violet-300: #7438c2;
-  --color-violet-400: #8e4fd8;
-  --color-violet-500: #a142f4;
+  --color-violet-200: #3a2c6b;
+  --color-violet-300: #4a3a86;
+  --color-violet-400: #5f4ea2;
+  --color-violet-500: #7865b5;
 
-  --color-teal-400: #12a4af;
+  --color-teal-400: #13776a;
+
+  --grid-dot: rgb(47 107 79 / 0.08);
 }
 
 :root {
   color-scheme: dark;
-  --gemini-gradient: linear-gradient(74deg, #4285f4 0%, #9b72cb 45%, #d96570 100%);
+  --grid-dot: rgb(143 208 168 / 0.05);
 }
 
 @layer base {
@@ -125,11 +139,22 @@
 
   body {
     @apply bg-slate-950 font-sans text-slate-100 antialiased;
-    font-feature-settings: "ss01", "cv11";
+    /* Faint dotted paper */
+    background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.01em;
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--color-accent) 30%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 35%, transparent);
   }
 
   button:focus-visible,
@@ -137,7 +162,7 @@
   select:focus-visible,
   input:focus-visible,
   textarea:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-accent-ink);
     outline-offset: 2px;
   }
 
@@ -146,45 +171,21 @@
   }
 }
 
-/* Gemini signature gradient helpers */
-@utility gemini-text {
-  background: var(--gemini-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@utility gemini-bg {
-  background: var(--gemini-gradient);
-}
-
-/* 1px gradient outline that follows border-radius */
-@utility gemini-ring {
-  position: relative;
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: var(--gemini-gradient);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-}
-
-@keyframes gemini-spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* A soft highlighter stroke under a word */
+@utility marker {
+  background-image: linear-gradient(
+    color-mix(in oklab, var(--color-accent) 35%, transparent),
+    color-mix(in oklab, var(--color-accent) 35%, transparent)
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 0.4em;
+  background-position: 0 90%;
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;

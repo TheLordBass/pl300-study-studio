@@ -97,13 +97,13 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
               key={s.id}
               onClick={() => onChangeSubMode(s.id)}
               aria-current={on ? 'page' : undefined}
-              className={`flex items-center gap-3 rounded-3xl p-4 text-left transition ${
+              className={`flex items-center gap-3 rounded-xl p-4 text-left transition ${
                 on ? 'bg-accent/15 text-white' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
               }`}
             >
               <span
                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-                  on ? 'bg-accent text-slate-950' : 'bg-slate-950 text-accent'
+                  on ? 'bg-accent text-on-accent' : 'bg-slate-950 text-accent-ink'
                 }`}
               >
                 <Icon className="h-5 w-5" />
@@ -124,7 +124,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
       {subMode === 'drills' && activeDrill && (
         <div className="space-y-4">
           {/* Streak & Category Bar */}
-          <div className="flex flex-col gap-3 rounded-3xl bg-slate-900 p-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap gap-1.5">
               {CATEGORIES.map((cat) => (
                 <button
@@ -134,7 +134,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
                     setDrillIdx(0);
                     setSelectedOption(null);
                   }}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                  className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
                     categoryFilter === cat
                       ? 'bg-violet-500/20 text-violet-200 border border-violet-500/50'
                       : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-white'
@@ -158,7 +158,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
           </div>
 
           {/* Active Drill Card */}
-          <div className="rounded-3xl bg-slate-900 p-6 space-y-5">
+          <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 space-y-5">
             <div className="flex items-center justify-between text-xs">
               <span className="rounded-md bg-violet-500/15 px-2.5 py-1 font-semibold text-violet-300">
                 {activeDrill.category}
@@ -220,7 +220,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
                   </div>
                   <button
                     onClick={handleNext}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-slate-950 hover:bg-accent-hover"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-on-accent hover:bg-accent-hover"
                   >
                     Next Scenario
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -236,7 +236,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
       {subMode === 'cheatsheets' && (
         <div className="space-y-6">
           {/* Workspace Roles Table */}
-          <div className="overflow-hidden rounded-3xl bg-slate-900">
+          <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
             <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
               <div className="flex items-center gap-2">
                 <ShieldAlert className="h-5 w-5 text-violet-400" />
@@ -273,7 +273,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
           </div>
 
           {/* Storage Modes Table */}
-          <div className="overflow-hidden rounded-3xl bg-slate-900">
+          <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
             <div className="flex items-center gap-2 border-b border-slate-800 px-5 py-4">
               <Table2 className="h-5 w-5 text-amber-400" />
               <h2 className="font-bold text-white">Storage Modes Comparison (Import vs DirectQuery vs Dual)</h2>
@@ -303,7 +303,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
           </div>
 
           {/* DAX Modifiers Table */}
-          <div className="overflow-hidden rounded-3xl bg-slate-900">
+          <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
             <div className="flex items-center gap-2 border-b border-slate-800 px-5 py-4">
               <BookMarked className="h-5 w-5 text-sky-400" />
               <h2 className="font-bold text-white">Essential DAX Filter Modifiers & Traps</h2>

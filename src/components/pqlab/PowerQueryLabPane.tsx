@@ -111,7 +111,7 @@ const Ribbon: React.FC<{ tabs: Record<string, RibbonButton[]> }> = ({ tabs }) =>
               setOpen(null);
             }}
             className={`rounded-t-lg px-3 py-1.5 text-xs font-medium transition ${
-              tab === n ? 'border-b-2 border-accent text-accent' : 'text-slate-400 hover:text-white'
+              tab === n ? 'border-b-2 border-accent text-accent-ink' : 'text-slate-400 hover:text-white'
             }`}
           >
             {n}
@@ -131,7 +131,7 @@ const Ribbon: React.FC<{ tabs: Record<string, RibbonButton[]> }> = ({ tabs }) =>
                   b.run?.();
                 }
               }}
-              className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-800 disabled:opacity-35 disabled:hover:bg-transparent"
+              className="inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-800 disabled:opacity-35 disabled:hover:bg-transparent"
             >
               {b.label}
               {b.items && <ChevronDown className="h-3 w-3" />}
@@ -190,7 +190,7 @@ const DataGrid: React.FC<{
                 <th
                   key={c + i}
                   className={`relative min-w-[110px] cursor-pointer border-b border-r border-slate-800 px-2 py-1.5 text-left font-semibold ${
-                    sel ? 'bg-accent/15 text-accent' : 'text-slate-200'
+                    sel ? 'bg-accent/15 text-accent-ink' : 'text-slate-200'
                   }`}
                   onClick={(e) => onSelect?.(c, e.ctrlKey || e.metaKey || e.shiftKey)}
                 >
@@ -282,8 +282,8 @@ export const PowerQueryLabPane: React.FC<Props> = ({ completed, onComplete }) =>
         <button
           key={s.id}
           onClick={() => setIdx(i)}
-          className={`flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs font-medium transition ${
-            i === idx ? 'bg-accent text-slate-950' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+          className={`flex shrink-0 items-center gap-2 rounded-md px-3.5 py-2 text-xs font-medium transition ${
+            i === idx ? 'bg-accent text-on-accent' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
           }`}
         >
           {completed.includes(s.id) && (
@@ -469,12 +469,12 @@ const ScenarioWorkspace: React.FC<{
 
       {/* Brief */}
       <div className="grid gap-4 lg:grid-cols-5">
-        <div className="space-y-3 rounded-3xl bg-slate-900 p-5 lg:col-span-3">
+        <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:col-span-3">
           <div className="flex flex-wrap items-center gap-2">
-            <FileSpreadsheet className="h-5 w-5 text-accent" />
+            <FileSpreadsheet className="h-5 w-5 text-accent-ink" />
             <h2 className="text-lg font-medium text-white">{scenario.title}</h2>
             <span
-              className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${
+              className={`rounded-md px-2.5 py-0.5 text-[11px] font-medium ${
                 scenario.difficulty === 'Exam Trap'
                   ? 'bg-rose-500/15 text-rose-300'
                   : scenario.difficulty === 'Tricky'
@@ -488,7 +488,7 @@ const ScenarioWorkspace: React.FC<{
           <p className="text-sm leading-relaxed text-slate-300">{scenario.story}</p>
           <div className="flex flex-wrap gap-1.5">
             {scenario.skills.map((k) => (
-              <span key={k} className="rounded-full bg-slate-950 px-2.5 py-0.5 text-[11px] text-slate-400">
+              <span key={k} className="rounded-md bg-slate-950 px-2.5 py-0.5 text-[11px] text-slate-400">
                 {k}
               </span>
             ))}
@@ -504,7 +504,7 @@ const ScenarioWorkspace: React.FC<{
                       const src = q.source as Extract<typeof q.source, { kind: 'file' }>;
                       download(src.file.replace(/\.xlsx$/, '.csv'), toCsv(src.table, src.format === 'csv'));
                     }}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 px-3 py-1.5 text-[11px] font-medium text-slate-300 hover:bg-slate-800"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-slate-700 px-3 py-1.5 text-[11px] font-medium text-slate-300 hover:bg-slate-800"
                     title="Download to practise the same steps in Power BI Desktop"
                   >
                     <Download className="h-3.5 w-3.5" />
@@ -515,9 +515,9 @@ const ScenarioWorkspace: React.FC<{
           </div>
         </div>
 
-        <div className="space-y-3 rounded-3xl bg-slate-900 p-5 lg:col-span-2">
+        <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:col-span-2">
           <h3 className="flex items-center gap-2 text-sm font-medium text-white">
-            <ListChecks className="h-4 w-4 text-accent" />
+            <ListChecks className="h-4 w-4 text-accent-ink" />
             The brief
           </h3>
           <ol className="list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-slate-300">
@@ -535,7 +535,7 @@ const ScenarioWorkspace: React.FC<{
               ))}
             </ul>
           )}
-          <a href="#/matrix/pq" className="mr-4 inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:underline">
+          <a href="#/matrix/pq" className="mr-4 inline-flex items-center gap-1.5 text-xs font-medium text-accent-ink hover:underline">
             <Eye className="h-3.5 w-3.5" />
             Where’s this in Power BI? Open the guides
           </a>
@@ -553,7 +553,7 @@ const ScenarioWorkspace: React.FC<{
 
       <div className="grid gap-4 xl:grid-cols-[180px_minmax(0,1fr)_240px]">
         {/* Queries */}
-        <div className="rounded-3xl bg-slate-900 p-3">
+        <div className="rounded-xl border border-slate-800 bg-slate-900 p-3">
           <div className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             Queries [{scenario.queries.length}]
           </div>
@@ -566,8 +566,8 @@ const ScenarioWorkspace: React.FC<{
                   setViewStep(null);
                   setSelected([]);
                 }}
-                className={`flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 text-left text-xs transition ${
-                  active === q.name ? 'bg-accent/15 text-accent' : 'text-slate-300 hover:bg-slate-800'
+                className={`flex shrink-0 items-center gap-2 rounded-md px-3 py-1.5 text-left text-xs transition ${
+                  active === q.name ? 'bg-accent/15 text-accent-ink' : 'text-slate-300 hover:bg-slate-800'
                 }`}
               >
                 <Table2 className="h-3.5 w-3.5 shrink-0" />
@@ -616,15 +616,15 @@ const ScenarioWorkspace: React.FC<{
         </div>
 
         {/* Applied steps */}
-        <div className="rounded-3xl bg-slate-900 p-3">
+        <div className="rounded-xl border border-slate-800 bg-slate-900 p-3">
           <div className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Applied Steps</div>
           <ol className="space-y-0.5">
             {run.steps.map((s, i) => (
               <li key={i} className="group flex items-center gap-1">
                 <button
                   onClick={() => setViewStep(i === lastIdx ? null : i)}
-                  className={`flex min-w-0 flex-1 items-center gap-2 rounded-full px-3 py-1.5 text-left text-xs transition ${
-                    i === shownIdx ? 'bg-accent/15 text-accent' : 'text-slate-300 hover:bg-slate-800'
+                  className={`flex min-w-0 flex-1 items-center gap-2 rounded-md px-3 py-1.5 text-left text-xs transition ${
+                    i === shownIdx ? 'bg-accent/15 text-accent-ink' : 'text-slate-300 hover:bg-slate-800'
                   }`}
                 >
                   {s.error ? (
@@ -651,13 +651,13 @@ const ScenarioWorkspace: React.FC<{
 
       {/* Actions */}
       <div className="flex flex-wrap items-center gap-2">
-        <button onClick={check} className="inline-flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-slate-950 hover:bg-accent-hover">
+        <button onClick={check} className="inline-flex items-center gap-1.5 rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-on-accent hover:bg-accent-hover">
           <CheckCircle2 className="h-4 w-4" />
           Check {scenario.check}
         </button>
         <button
           onClick={() => setPanel(panel === 'target' ? null : 'target')}
-          className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-medium transition ${
+          className={`inline-flex items-center gap-1.5 rounded-md px-4 py-2.5 text-sm font-medium transition ${
             panel === 'target' ? 'bg-slate-700 text-white' : 'border border-slate-700 text-slate-200 hover:bg-slate-800'
           }`}
         >
@@ -666,7 +666,7 @@ const ScenarioWorkspace: React.FC<{
         </button>
         <button
           onClick={() => setPanel(panel === 'advanced' ? null : 'advanced')}
-          className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-medium transition ${
+          className={`inline-flex items-center gap-1.5 rounded-md px-4 py-2.5 text-sm font-medium transition ${
             panel === 'advanced' ? 'bg-slate-700 text-white' : 'border border-slate-700 text-slate-200 hover:bg-slate-800'
           }`}
         >
@@ -674,11 +674,11 @@ const ScenarioWorkspace: React.FC<{
           Advanced Editor
         </button>
         <div className="flex-1" />
-        <button onClick={showSolution} className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium text-slate-400 hover:bg-slate-800 hover:text-white">
+        <button onClick={showSolution} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium text-slate-400 hover:bg-slate-800 hover:text-white">
           <Sparkles className="h-3.5 w-3.5 text-amber-300" />
           Show solution
         </button>
-        <button onClick={reset} className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium text-slate-400 hover:bg-rose-500/10 hover:text-rose-300">
+        <button onClick={reset} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium text-slate-400 hover:bg-rose-500/10 hover:text-rose-300">
           <RotateCcw className="h-3.5 w-3.5" />
           Reset
         </button>
@@ -686,7 +686,7 @@ const ScenarioWorkspace: React.FC<{
 
       {result && (
         <div
-          className={`rounded-3xl border p-4 text-sm ${
+          className={`rounded-xl border p-4 text-sm ${
             result.ok ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200' : 'border-rose-500/40 bg-rose-500/10 text-rose-200'
           }`}
         >
@@ -719,7 +719,7 @@ const ScenarioWorkspace: React.FC<{
       )}
 
       {panel === 'advanced' && (
-        <div className="rounded-3xl bg-slate-900 p-4">
+        <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
           <div className="mb-2 text-xs text-slate-400">
             Advanced Editor — <span className="text-white">{active}</span> (read-only: the M your steps generate)
           </div>

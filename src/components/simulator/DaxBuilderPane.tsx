@@ -88,7 +88,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
   return (
     <div className="grid gap-4 lg:grid-cols-12">
       {/* Left Challenge Selector */}
-      <div className="lg:col-span-4 space-y-2 rounded-3xl bg-slate-900 p-4">
+      <div className="lg:col-span-4 space-y-2 rounded-xl border border-slate-800 bg-slate-900 p-4">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
             DAX Slot Challenges
@@ -123,7 +123,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
       </div>
 
       {/* Right Interactive Formula Builder */}
-      <div className="lg:col-span-8 rounded-3xl bg-slate-900 p-6 space-y-5">
+      <div className="lg:col-span-8 rounded-xl border border-slate-800 bg-slate-900 p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Code2 className="h-5 w-5 text-sky-400" />
@@ -164,7 +164,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
                 } else if (val) {
                   slotStyle = 'border-sky-400 bg-sky-500/20 text-sky-200';
                 } else if (isSelected) {
-                  slotStyle = 'border-accent bg-accent/10 text-accent';
+                  slotStyle = 'border-accent bg-accent/10 text-accent-ink';
                 }
 
                 return (
@@ -208,7 +208,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
             <button
               disabled={slots.some((s) => s === null)}
               onClick={handleCheck}
-              className="rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-slate-950 transition hover:bg-accent-hover disabled:opacity-40"
+              className="rounded-2xl bg-accent px-4 py-2 text-xs font-bold text-on-accent transition hover:bg-accent-hover disabled:opacity-40"
             >
               Validate Formula
             </button>

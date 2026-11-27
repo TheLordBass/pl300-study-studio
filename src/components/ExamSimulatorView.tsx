@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   CheckSquare,
   Code2,
@@ -80,10 +80,21 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
   onMarkPqLabCompleted,
   onRecordCaseStudyScore,
 }) => {
+  // Keep the active mode visible in the phone scroll row.
+  const row = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = row.current?.querySelector<HTMLElement>('[aria-current="page"]');
+    const r = row.current;
+    if (el && r && r.scrollWidth > r.clientWidth) {
+      r.scrollTo({ left: el.offsetLeft - r.offsetLeft - 16, behavior: 'smooth' });
+    }
+  }, [activeSubTab]);
+
   return (
     <div className="space-y-6">
       {/* Sub-Navigation Cards */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      {/* Phones: one scrolling row of compact modes. Desktop: five cards. */}
+      <div ref={row} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 xl:grid xl:grid-cols-5 xl:gap-3 xl:overflow-visible">
         {SUB_TABS.map((tab) => {
           const Icon = tab.icon;
           const active = activeSubTab === tab.id;
@@ -91,22 +102,21 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
             <button
               key={tab.id}
               onClick={() => onChangeSubTab(tab.id)}
-              className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition ${
+              aria-current={active ? 'page' : undefined}
+              className={`flex shrink-0 items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition xl:shrink xl:p-4 ${
                 active
-                  ? 'border-accent bg-accent/15 text-white shadow-lg shadow-accent/10'
-                  : 'border-transparent bg-slate-900 text-slate-300 hover:bg-slate-800'
+                  ? 'border-accent bg-accent/15 text-white'
+                  : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700'
               }`}
             >
               <div
-                className={`rounded-2xl p-2.5 ${
-                  active ? 'bg-accent text-slate-950' : 'bg-slate-800 text-amber-400'
-                }`}
+                className={`rounded-lg p-2 ${active ? 'bg-accent text-on-accent' : 'bg-slate-950 text-slate-400'}`}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-4 w-4 xl:h-5 xl:w-5" />
               </div>
               <div>
-                <div className="text-sm font-bold">{tab.label}</div>
-                <div className="text-[11px] text-slate-400">{tab.desc}</div>
+                <div className="whitespace-nowrap text-sm font-semibold">{tab.label}</div>
+                <div className="hidden text-[11px] text-slate-400 xl:block">{tab.desc}</div>
               </div>
             </button>
           );

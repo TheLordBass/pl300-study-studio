@@ -67,7 +67,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
       return (
         <p key={i} className="rounded-lg border border-accent/50 bg-accent/10 p-2.5 leading-relaxed text-slate-100">
           {before}
-          <mark className="rounded bg-accent px-1 py-0.5 font-semibold text-slate-950">
+          <mark className="rounded bg-accent px-1 py-0.5 font-semibold text-on-accent">
             {match}
           </mark>
           {after}
@@ -84,7 +84,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
   return (
     <div className="space-y-4">
       {/* Case Study Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-slate-900 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4">
         <div className="flex flex-wrap gap-2">
           {CASE_STUDIES.map((cs, idx) => {
             const best = progress.caseStudyScores[cs.id] ?? 0;
@@ -125,7 +125,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
       {/* Split Screen Layout: Left Exhibits | Right Questions */}
       <div className="grid gap-4 lg:grid-cols-12">
         {/* LEFT PANE: 5-Tab Exhibit Browser */}
-        <div className="lg:col-span-6 flex flex-col rounded-3xl bg-slate-900 overflow-hidden">
+        <div className="lg:col-span-6 flex flex-col rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
           <div className="border-b border-slate-800 bg-slate-950/60 p-4">
             <div className="flex items-center gap-2 text-xs font-semibold text-emerald-300">
               <Layers className="h-4 w-4" />
@@ -146,9 +146,9 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                     setActiveExhibitId(ex.id);
                     setHighlightedQuote(null);
                   }}
-                  className={`rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition ${
+                  className={`rounded-md px-2.5 py-1.5 text-[11px] font-semibold transition ${
                     isSelected
-                      ? 'bg-accent text-slate-950'
+                      ? 'bg-accent text-on-accent'
                       : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white'
                   }`}
                 >
@@ -178,7 +178,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
         </div>
 
         {/* RIGHT PANE: Linked Questions */}
-        <div className="lg:col-span-6 flex flex-col justify-between rounded-3xl bg-slate-900 p-5 space-y-5">
+        <div className="lg:col-span-6 flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-900 p-5 space-y-5">
           <div className="space-y-4">
             {/* Question Number Pills */}
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -211,7 +211,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
 
               <button
                 onClick={handleHighlightEvidence}
-                className="inline-flex items-center gap-1.5 rounded-2xl border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent transition hover:bg-accent/20"
+                className="inline-flex items-center gap-1.5 rounded-2xl border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent-ink transition hover:bg-accent/20"
               >
                 <Highlighter className="h-3.5 w-3.5" />
                 Highlight Evidence in Exhibit
@@ -289,7 +289,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
                 setQuestionIdx((i) => Math.min(caseStudy.questions.length - 1, i + 1));
                 setHighlightedQuote(null);
               }}
-              className="rounded-2xl bg-accent px-3.5 py-1.5 text-xs font-bold text-slate-950 disabled:opacity-40"
+              className="rounded-2xl bg-accent px-3.5 py-1.5 text-xs font-bold text-on-accent disabled:opacity-40"
             >
               Next Q
             </button>

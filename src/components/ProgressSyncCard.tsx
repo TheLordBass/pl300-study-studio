@@ -115,7 +115,7 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
   };
 
   return (
-    <div className="rounded-3xl bg-slate-900 p-5 space-y-4">
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-5 space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-sm font-bold text-white">
@@ -152,10 +152,10 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
 
           <button
             onClick={() => setShowCloudSync((v) => !v)}
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold transition ${
+            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold transition ${
               showCloudSync
-                ? 'bg-accent text-slate-950'
-                : 'border border-accent/40 bg-accent/10 text-accent hover:bg-accent/20'
+                ? 'bg-accent text-on-accent'
+                : 'border border-accent/40 bg-accent/10 text-accent-ink hover:bg-accent/20'
             }`}
           >
             <Cloud className="h-3.5 w-3.5" />
@@ -183,7 +183,7 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
                 value={gistConfig.token}
                 onChange={(e) => updateGistField('token', e.target.value)}
                 placeholder="ghp_... or github_pat_..."
-                className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-accent focus:outline-none"
+                className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
               />
             </div>
             <div>
@@ -195,7 +195,7 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
                 value={gistConfig.gistId}
                 onChange={(e) => updateGistField('gistId', e.target.value)}
                 placeholder="e.g. a1b2c3d4e5f6..."
-                className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-xs text-white placeholder-slate-500 focus:border-accent focus:outline-none"
+                className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-xs text-white placeholder-slate-500 focus:border-accent-ink focus:outline-none"
               />
             </div>
           </div>
@@ -204,7 +204,7 @@ export const ProgressSyncCard: React.FC<ProgressSyncCardProps> = ({
             <button
               disabled={syncBusy !== null}
               onClick={handlePushGist}
-              className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 text-xs font-bold text-slate-950 transition hover:bg-accent-hover disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-2xl bg-accent px-3.5 py-2 text-xs font-bold text-on-accent transition hover:bg-accent-hover disabled:opacity-50"
             >
               {syncBusy === 'push' ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
