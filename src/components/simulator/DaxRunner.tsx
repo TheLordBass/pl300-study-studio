@@ -151,7 +151,7 @@ export const DaxRunner: React.FC<DaxRunnerProps> = ({ challenge, slots, revealed
   const wrong = new Set(result?.wrongRows ?? []);
 
   return (
-    <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-950/40 p-5">
+    <div data-tour="dax-runner" className="space-y-4 rounded-xl border border-slate-800 bg-slate-950/40 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="flex items-center gap-2 text-sm font-bold text-white">

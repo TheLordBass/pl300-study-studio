@@ -125,7 +125,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
         </div>
 
         {/* Sub-view switcher + Search */}
-        <div className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div data-tour="cur-switch" className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setActiveSubSection('modules')}
@@ -164,7 +164,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
         </div>
 
         {/* Domain Filter Pills */}
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div data-tour="cur-filters" className="mt-4 flex flex-wrap gap-2">
           <button
             onClick={() => onChangeDomainFilter('all')}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
@@ -199,7 +199,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               No Microsoft Learn modules match these filters. Try clearing the search.
             </div>
           ) : (
-            filteredModules.map((mod) => {
+            filteredModules.map((mod, modIdx) => {
               const domainMeta = PL300_DOMAINS.find((d) => d.id === mod.domain)!;
               const isExpanded = Boolean(expandedModules[mod.id]);
               const doneInMod = mod.skills.filter((s) =>
@@ -210,6 +210,7 @@ export const CurriculumHubView: React.FC<CurriculumHubViewProps> = ({
               return (
                 <div
                   key={mod.id}
+                  data-tour={modIdx === 0 ? 'cur-module' : undefined}
                   className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900 transition hover:border-slate-700"
                 >
                   {/* Module Header */}

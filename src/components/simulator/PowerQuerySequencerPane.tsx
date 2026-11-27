@@ -178,7 +178,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
         </p>
 
         {/* Before / After Preview */}
-        <div className="grid gap-3 md:grid-cols-2">
+        <div data-tour="pq-seq-data" className="grid gap-3 md:grid-cols-2">
           <PreviewTable
             title="Source data"
             data={challenge.messyTablePreview}
@@ -192,7 +192,7 @@ export const PowerQuerySequencerPane: React.FC<PowerQuerySequencerPaneProps> = (
         </div>
 
         {/* Step Builder Columns */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div data-tour="pq-seq-steps" className="grid gap-4 md:grid-cols-2">
           {/* Available Steps */}
           <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
             <div className="mb-3 text-xs font-bold text-slate-300">

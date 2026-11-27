@@ -87,7 +87,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
   return (
     <div className="grid gap-4 lg:grid-cols-12">
       {/* Left Challenge Selector */}
-      <div className="lg:col-span-4 space-y-2 rounded-xl border border-slate-800 bg-slate-900 p-4">
+      <div data-tour="dax-list" className="lg:col-span-4 space-y-2 rounded-xl border border-slate-800 bg-slate-900 p-4">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-xs font-bold text-slate-300">
             DAX challenges
@@ -141,7 +141,7 @@ export const DaxBuilderPane: React.FC<DaxBuilderPaneProps> = ({
         </div>
 
         {/* Formula Code Editor Area */}
-        <div className="rounded-xl border border-slate-700 bg-slate-950 p-5">
+        <div data-tour="dax-slots" className="rounded-xl border border-slate-700 bg-slate-950 p-5">
           <div className="mb-2 text-xs font-bold text-slate-400">
             Pick a slot, then a function to drop into it. Click a filled slot to empty it.
           </div>

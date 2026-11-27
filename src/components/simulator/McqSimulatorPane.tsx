@@ -159,7 +159,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
           </select>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div data-tour="mcq-modes" className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => {
               if (examRunning && !window.confirm('Abandon the timed exam in progress?')) return;
@@ -239,7 +239,7 @@ export const McqSimulatorPane: React.FC<McqSimulatorPaneProps> = ({
       ) : (
         <div className="grid gap-4 lg:grid-cols-12">
           {/* Question Navigator Rail */}
-          <div className="lg:col-span-3 rounded-xl border border-slate-800 bg-slate-900 p-4">
+          <div data-tour="mcq-map" className="lg:col-span-3 rounded-xl border border-slate-800 bg-slate-900 p-4">
             <div className="mb-3 flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-300">Questions</span>
               <span className="text-slate-400">

@@ -1,6 +1,6 @@
 export type DomainId = 'prepare' | 'model' | 'visualize' | 'manage';
 
-export type MainTab = 'dashboard' | 'curriculum' | 'simulator' | 'matrix' | 'flashcards';
+export type MainTab = 'dashboard' | 'curriculum' | 'simulator' | 'matrix' | 'flashcards' | 'help';
 
 export type SimulatorSubTab = 'mcq' | 'dax' | 'powerquery' | 'pqlab' | 'casestudy';
 

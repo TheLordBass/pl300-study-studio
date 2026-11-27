@@ -97,6 +97,7 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
       <div
         ref={row}
         role="tablist"
+        data-tour="sim-tabs"
         aria-label="Practice modes"
         className="flex gap-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-1"
       >

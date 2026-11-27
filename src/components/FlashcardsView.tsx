@@ -138,6 +138,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
           </span>
           <button
             onClick={() => setShowCreateModal(true)}
+            data-tour="fc-new"
             className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-3.5 py-2 font-bold text-on-accent hover:bg-accent-hover"
           >
             <Plus className="h-4 w-4" />
@@ -147,7 +148,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2">
+      <div data-tour="fc-filters" className="flex flex-wrap gap-2">
         <button
           onClick={() => {
             setFilterMode('all');
@@ -233,6 +234,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
 
           {/* Interactive Card */}
           <div
+            data-tour="fc-card"
             onClick={() => setFlipped((f) => !f)}
             className="min-h-[290px] cursor-pointer rounded-xl border border-slate-800 bg-slate-900 p-7 shadow-sm transition hover:border-accent/50 flex flex-col justify-between"
           >

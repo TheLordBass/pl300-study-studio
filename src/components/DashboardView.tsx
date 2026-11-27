@@ -11,7 +11,7 @@ import {
   Layers,
   Lightbulb,
   ListOrdered,
-  RotateCcw,
+  Link2,
   ShieldCheck,
   Target,
 } from 'lucide-react';
@@ -25,25 +25,25 @@ import {
 import { FLASHCARDS, MATRIX_DRILLS } from '../data/matrixAndFlashcardsData';
 import { PQ_SCENARIOS } from '../pqlab/scenarios';
 import { computeDomainAnalytics, computeReadinessScore } from '../utils/progressHelpers';
-import { ProgressSyncCard } from './ProgressSyncCard';
+import { useSyncStatus, whenText } from '../sync/useSyncStatus';
 
 interface DashboardViewProps {
   progress: UserProgress;
   onNavigateTab: (tab: MainTab, simSubTab?: SimulatorSubTab, domainFilter?: DomainId | 'all') => void;
-  onImportProgress: (nextProgress: UserProgress) => void;
-  onResetProgress: () => void;
+  onOpenDevices: () => void;
 }
 
 const DOMAIN_ICONS = { Database, Boxes, BarChart3, ShieldCheck };
 
 /** A report-style card: small caption on top, content below. */
-const Card: React.FC<{ title?: string; action?: React.ReactNode; className?: string; children: React.ReactNode }> = ({
+const Card: React.FC<{ title?: string; action?: React.ReactNode; className?: string; tour?: string; children: React.ReactNode }> = ({
   title,
   action,
   className = '',
+  tour,
   children,
 }) => (
-  <section className={`min-w-0 rounded-xl border border-slate-800 bg-slate-900 p-5 ${className}`}>
+  <section data-tour={tour} className={`min-w-0 rounded-xl border border-slate-800 bg-slate-900 p-5 ${className}`}>
     {(title || action) && (
       <div className="mb-4 flex items-center justify-between gap-3">
         {title && <h3 className="text-[15px] font-bold text-white">{title}</h3>}
@@ -72,9 +72,9 @@ const Bar: React.FC<{ pct: number; tone?: 'accent' | 'good'; marker?: number; he
 export const DashboardView: React.FC<DashboardViewProps> = ({
   progress,
   onNavigateTab,
-  onImportProgress,
-  onResetProgress,
+  onOpenDevices,
 }) => {
+  const sync = useSyncStatus();
   const analytics = computeDomainAnalytics(progress);
   const score = computeReadinessScore(analytics, progress);
   const isPassing = score >= 700;
@@ -189,7 +189,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       {/* ===== Score + stats in one panel ===== */}
-      <section className="grid min-w-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+      <section data-tour="score" className="grid min-w-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div className="p-5 sm:p-6">
           <h3 className="text-[15px] font-bold text-white">Simulated exam score</h3>
           <div className="mt-3 flex items-baseline gap-2">
@@ -235,7 +235,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </section>
 
       {/* ===== Next step ===== */}
-      <section className="flex min-w-0 flex-col gap-4 rounded-xl bg-accent/10 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <section data-tour="next-step" className="flex min-w-0 flex-col gap-4 rounded-xl bg-accent/10 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="text-sm text-slate-400">Your weakest area right now</p>
           <p className="mt-0.5 font-display text-xl font-extrabold text-white">{weakest.title}</p>
@@ -263,6 +263,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <div className="grid gap-4 xl:grid-cols-5">
         <Card
           title="Mastery by domain"
+          tour="domains"
           className="xl:col-span-3"
           action={
             <span className="flex items-center gap-1.5 text-[11px] text-slate-500">
@@ -313,7 +314,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </Card>
 
-        <Card title="Hands-on labs" className="xl:col-span-2">
+        <Card title="Hands-on labs" tour="labs" className="xl:col-span-2">
           <ul className="-mx-2 divide-y divide-slate-800">
             {labs.map((l) => {
               const Icon = l.icon;
@@ -346,11 +347,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </Card>
       </div>
 
-      {/* ===== Sync ===== */}
-      <ProgressSyncCard progress={progress} onImportProgress={onImportProgress} />
+      {/* ===== Devices + tip ===== */}
+      <div className="grid gap-4 lg:grid-cols-2">
+      <section className="flex min-w-0 flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h3 className="flex items-center gap-2 text-[15px] font-bold text-white">
+            Your devices
+            <span className={`h-2 w-2 rounded-full ${sync.error ? 'bg-rose-400' : sync.on ? 'bg-emerald-400' : 'bg-slate-600'}`} />
+          </h3>
+          <p className="mt-0.5 text-sm text-slate-400">
+            {sync.error
+              ? 'Sync needs a look.'
+              : sync.on
+              ? `Synced ${whenText(sync.lastSynced)} · version ${sync.version}`
+              : 'Progress is only on this device. Link your phone or laptop to share it.'}
+          </p>
+        </div>
+        <button
+          onClick={onOpenDevices}
+          className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-lg border border-slate-700 px-3.5 py-2 text-sm font-semibold text-slate-200 hover:border-slate-600 sm:self-auto"
+        >
+          <Link2 className="h-4 w-4" />
+          {sync.on ? 'Manage' : 'Link devices'}
+        </button>
+      </section>
 
-      {/* ===== Tip + reset ===== */}
-      <div className="flex flex-col gap-4 rounded-xl border border-dashed border-slate-700 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 items-start rounded-xl border border-dashed border-slate-700 p-5">
         <div className="flex items-start gap-3 text-sm text-slate-300">
           <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" />
           <p className="leading-relaxed">
@@ -359,17 +381,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             return to a case study once you submit it, but you can flag regular questions for review.
           </p>
         </div>
-        <button
-          onClick={() => {
-            if (window.confirm('Reset all PL-300 study progress, notes, and custom flashcards?')) {
-              onResetProgress();
-            }
-          }}
-          className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-lg px-3 py-2 text-xs font-medium text-slate-400 transition hover:bg-rose-500/10 hover:text-rose-300 sm:self-auto"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          Reset progress
-        </button>
+      </div>
       </div>
     </div>
   );

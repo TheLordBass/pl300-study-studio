@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BookOpen,
   Brain,
+  CircleHelp,
   Flame,
   LayoutDashboard,
   Moon,
@@ -28,6 +29,14 @@ import { CurriculumHubView } from './components/CurriculumHubView';
 import { ExamSimulatorView } from './components/ExamSimulatorView';
 import { CheatSheetMatrixView, GuideSection } from './components/CheatSheetMatrixView';
 import { FlashcardsView } from './components/FlashcardsView';
+import { HELP_SECTIONS, HelpSection, HelpView } from './components/help/HelpView';
+import { Tour } from './components/Tour';
+import { readSeenVersion, releasesSince, WhatsNew, writeSeenVersion } from './components/WhatsNew';
+import { resetTour, tourDue } from './data/tours';
+import { cloudSync } from './sync/engine';
+import { isEmptyProgress } from './sync/merge';
+import { useSyncStatus } from './sync/useSyncStatus';
+import { APP_VERSION, CHANGELOG, Release } from './version';
 
 const NAV_ITEMS: {
   id: MainTab;
@@ -42,20 +51,35 @@ const NAV_ITEMS: {
   { id: 'flashcards', label: 'Flashcards', short: 'Cards', icon: Brain },
 ];
 
-const TABS: MainTab[] = NAV_ITEMS.map((n) => n.id);
+const TABS: MainTab[] = [...NAV_ITEMS.map((n) => n.id), 'help'];
 const SUB_TABS: SimulatorSubTab[] = ['mcq', 'dax', 'powerquery', 'pqlab', 'casestudy'];
 
 const GUIDE_SECTIONS: GuideSection[] = ['dax', 'pq', 'drills', 'cheatsheets'];
 
 /** Read "#/simulator/dax" or "#/matrix/pq" style hashes so refreshes and links keep the page. */
-function readHash(): { tab: MainTab; sub?: SimulatorSubTab; guide?: GuideSection } {
+function readHash(): { tab: MainTab; sub?: SimulatorSubTab; guide?: GuideSection; help?: HelpSection } {
   const [tab, sub] = window.location.hash.replace(/^#\/?/, '').split('/');
   const main = TABS.includes(tab as MainTab) ? (tab as MainTab) : 'dashboard';
   return {
     tab: main,
     sub: main === 'simulator' && SUB_TABS.includes(sub as SimulatorSubTab) ? (sub as SimulatorSubTab) : undefined,
     guide: main === 'matrix' && GUIDE_SECTIONS.includes(sub as GuideSection) ? (sub as GuideSection) : undefined,
+    help: main === 'help' && HELP_SECTIONS.includes(sub as HelpSection) ? (sub as HelpSection) : undefined,
   };
+}
+
+/** Releases to announce on this visit: none for a brand-new user (the walkthrough covers them). */
+function initialWhatsNew(progress: UserProgress): Release[] {
+  const seen = readSeenVersion();
+  if (seen === null) {
+    // No record: someone new, or someone from before 2.0 (which didn't record it).
+    if (isEmptyProgress(progress)) {
+      writeSeenVersion(APP_VERSION);
+      return [];
+    }
+    return CHANGELOG.slice(0, 1);
+  }
+  return releasesSince(seen);
 }
 
 export function App() {
@@ -63,11 +87,29 @@ export function App() {
   const [activeTab, setActiveTab] = useState<MainTab>(() => readHash().tab);
   const [simSubTab, setSimSubTab] = useState<SimulatorSubTab>(() => readHash().sub ?? 'mcq');
   const [guideSection, setGuideSection] = useState<GuideSection>(() => readHash().guide ?? 'dax');
+  const [helpSection, setHelpSection] = useState<HelpSection>(() => readHash().help ?? 'guide');
+  const [whatsNew, setWhatsNew] = useState<Release[]>(() => initialWhatsNew(progress));
+  const [activeTour, setActiveTour] = useState<string | null>(null);
+  const sync = useSyncStatus();
   const [domainFilter, setDomainFilter] = useState<DomainId | 'all'>('all');
   const [theme, toggleTheme] = useTheme();
 
+  // Sync reads the latest progress through a ref, and can put a new copy in place.
+  const progressRef = useRef(progress);
+  progressRef.current = progress;
+  useEffect(() => {
+    cloudSync.start(
+      () => progressRef.current,
+      (next) => {
+        progressRef.current = next;
+        setProgress(next);
+      }
+    );
+  }, []);
+
   useEffect(() => {
     saveProgress(progress);
+    cloudSync.changed();
   }, [progress]);
 
   // Keep the URL hash in sync with the current view.
@@ -77,18 +119,42 @@ export function App() {
         ? `#/simulator/${simSubTab}`
         : activeTab === 'matrix'
         ? `#/matrix/${guideSection}`
+        : activeTab === 'help'
+        ? `#/help/${helpSection}`
         : `#/${activeTab}`;
     if (window.location.hash !== next) {
       window.history.replaceState(null, '', next);
     }
-  }, [activeTab, simSubTab, guideSection]);
+  }, [activeTab, simSubTab, guideSection, helpSection]);
+
+  // The page's walkthrough, the first time it's opened (after any What's new note).
+  const pageKey =
+    activeTab === 'simulator'
+      ? `simulator/${simSubTab}`
+      : activeTab === 'matrix'
+      ? `matrix/${guideSection}`
+      : activeTab === 'help'
+      ? `help/${helpSection}`
+      : activeTab;
+  useEffect(() => {
+    if (activeTour || whatsNew.length || !tourDue(pageKey)) return;
+    const t = setTimeout(() => setActiveTour(pageKey), 700);
+    return () => clearTimeout(t);
+  }, [pageKey, activeTour, whatsNew.length]);
+
+  const closeTour = useCallback(() => setActiveTour(null), []);
+  const closeWhatsNew = useCallback(() => {
+    writeSeenVersion(APP_VERSION);
+    setWhatsNew([]);
+  }, []);
 
   useEffect(() => {
     const onHash = () => {
-      const { tab, sub, guide } = readHash();
+      const { tab, sub, guide, help } = readHash();
       setActiveTab(tab);
       if (sub) setSimSubTab(sub);
       if (guide) setGuideSection(guide);
+      if (help) setHelpSection(help);
     };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
@@ -236,7 +302,15 @@ export function App() {
     progress
   );
   const isPassing = readinessScore >= 700;
-  const activeItem = NAV_ITEMS.find((n) => n.id === activeTab)!;
+  const pageLabel = activeTab === 'help' ? 'Help' : NAV_ITEMS.find((n) => n.id === activeTab)!.label;
+
+  /** Opens a page by its hash and replays its walkthrough. */
+  const replayTour = (key: string, hash: string) => {
+    resetTour(key);
+    setActiveTour(null);
+    window.location.hash = hash;
+    window.scrollTo({ top: 0 });
+  };
   const themeLabel = theme === 'light' ? 'Dark theme' : 'Light theme';
 
   /** A rail button with a label that slides out on hover or keyboard focus. */
@@ -265,7 +339,7 @@ export function App() {
           <RailTip label="PL-300 Studio" />
         </button>
 
-        <nav className="flex flex-1 flex-col items-center gap-2">
+        <nav className="flex flex-1 flex-col items-center gap-2" data-tour="nav">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -289,6 +363,19 @@ export function App() {
         </nav>
 
         <div className="flex flex-col items-center gap-3">
+          <button
+            onClick={() => handleNavigateTab('help')}
+            aria-label="Help and linked devices"
+            aria-current={activeTab === 'help' ? 'page' : undefined}
+            data-tour="help"
+            className={`group relative flex h-10 w-10 items-center justify-center rounded-xl transition ${
+              activeTab === 'help' ? 'bg-accent text-on-accent' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+            }`}
+          >
+            <CircleHelp className="h-5 w-5" />
+            <SyncDot on={sync.on} error={Boolean(sync.error)} />
+            <RailTip label={sync.on ? (sync.error ? 'Help · sync needs attention' : 'Help · devices linked') : 'Help & link devices'} />
+          </button>
           <button
             onClick={() => handleNavigateTab('dashboard')}
             aria-label={`Readiness ${readinessScore} of 1000`}
@@ -329,7 +416,7 @@ export function App() {
             <p className="hidden min-w-0 truncate text-sm md:block">
               <span className="font-extrabold text-white">PL-300 Studio</span>
               <span className="mx-2 text-slate-600">/</span>
-              <span className="font-semibold text-slate-400">{activeItem.label}</span>
+              <span className="font-semibold text-slate-400">{pageLabel}</span>
             </p>
 
             <div className="flex items-center gap-2">
@@ -347,6 +434,18 @@ export function App() {
                   <span className="absolute inset-y-0 left-[70%] w-0.5 bg-slate-100" />
                 </span>
               </div>
+              <button
+                onClick={() => handleNavigateTab('help')}
+                aria-label="Help and linked devices"
+                title="Help & link devices"
+                data-tour="help"
+                className={`relative flex h-9 w-9 items-center justify-center rounded-xl border transition md:hidden ${
+                  activeTab === 'help' ? 'border-accent bg-accent text-on-accent' : 'border-slate-800 text-slate-300 hover:text-white'
+                }`}
+              >
+                <CircleHelp className="h-4 w-4" />
+                <SyncDot on={sync.on} error={Boolean(sync.error)} />
+              </button>
               <button
                 onClick={toggleTheme}
                 aria-label={themeLabel}
@@ -367,8 +466,10 @@ export function App() {
             <DashboardView
               progress={progress}
               onNavigateTab={handleNavigateTab}
-              onImportProgress={setProgress}
-              onResetProgress={resetProgress}
+              onOpenDevices={() => {
+                setHelpSection('devices');
+                handleNavigateTab('help');
+              }}
             />
           )}
 
@@ -416,12 +517,37 @@ export function App() {
               onDeleteCustomFlashcard={deleteCustomFlashcard}
             />
           )}
+
+          {activeTab === 'help' && (
+            <HelpView
+              section={helpSection}
+              onChangeSection={setHelpSection}
+              progress={progress}
+              onReplaceProgress={setProgress}
+              onReplayTour={replayTour}
+              onShowWhatsNew={() => setWhatsNew(CHANGELOG.slice(0, 1))}
+              onResetProgress={resetProgress}
+            />
+          )}
         </main>
       </div>
+
+      {whatsNew.length > 0 && (
+        <WhatsNew
+          releases={whatsNew}
+          onClose={closeWhatsNew}
+          onOpen={(hash) => {
+            closeWhatsNew();
+            window.location.hash = hash;
+          }}
+        />
+      )}
+      {activeTour && <Tour key={activeTour} tourKey={activeTour} onDone={closeTour} />}
 
       {/* ===== Phone bottom navigation ===== */}
       <nav
         aria-label="Main"
+        data-tour="nav"
         className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-800 bg-slate-900/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden"
       >
         <div className="mx-auto grid max-w-lg grid-cols-5 px-1">
@@ -451,6 +577,17 @@ export function App() {
         </div>
       </nav>
     </div>
+  );
+}
+
+/** A small dot on the Help button: green when devices are linked, red when sync needs a look. */
+function SyncDot({ on, error }: { on: boolean; error: boolean }) {
+  if (!on && !error) return null;
+  return (
+    <span
+      aria-hidden="true"
+      className={`absolute right-1 top-1 h-2 w-2 rounded-full ring-2 ring-slate-900 ${error ? 'bg-rose-400' : 'bg-emerald-400'}`}
+    />
   );
 }
 

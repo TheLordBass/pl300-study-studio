@@ -514,7 +514,7 @@ const ScenarioWorkspace: React.FC<{
           </div>
         </div>
 
-        <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:col-span-2">
+        <div data-tour="pqlab-brief" className="space-y-3 rounded-xl border border-slate-800 bg-slate-900 p-5 lg:col-span-2">
           <h3 className="flex items-center gap-2 text-sm font-bold text-white">
             <ListChecks className="h-4 w-4 text-accent-ink" />
             The brief
@@ -548,7 +548,9 @@ const ScenarioWorkspace: React.FC<{
       </div>
 
       {/* Editor */}
-      <Ribbon tabs={ribbon} />
+      <div data-tour="pqlab-ribbon">
+        <Ribbon tabs={ribbon} />
+      </div>
 
       <div className="grid gap-4 xl:grid-cols-[180px_minmax(0,1fr)_240px]">
         {/* Queries */}
@@ -615,7 +617,7 @@ const ScenarioWorkspace: React.FC<{
         </div>
 
         {/* Applied steps */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900 p-3">
+        <div data-tour="pqlab-steps" className="rounded-xl border border-slate-800 bg-slate-900 p-3">
           <div className="mb-2 px-2 text-xs font-bold text-slate-400">Applied Steps</div>
           <ol className="space-y-0.5">
             {run.steps.map((s, i) => (

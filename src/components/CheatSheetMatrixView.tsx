@@ -90,6 +90,7 @@ export const CheatSheetMatrixView: React.FC<CheatSheetMatrixViewProps> = ({
       {/* Section switcher */}
       <div
         aria-label="Guide sections"
+        data-tour="guide-tabs"
         className="flex gap-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-1"
       >
         {SECTIONS.map((s) => {

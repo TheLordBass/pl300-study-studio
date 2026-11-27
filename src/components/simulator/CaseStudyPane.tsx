@@ -125,7 +125,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
       {/* Split Screen Layout: Left Exhibits | Right Questions */}
       <div className="grid gap-4 lg:grid-cols-12">
         {/* LEFT PANE: 5-Tab Exhibit Browser */}
-        <div className="lg:col-span-6 flex flex-col rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
+        <div data-tour="case-exhibits" className="lg:col-span-6 flex flex-col rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
           <div className="border-b border-slate-800 bg-slate-950/60 p-4">
             <div className="flex items-center gap-2 text-xs font-semibold text-emerald-300">
               <Layers className="h-4 w-4" />
@@ -178,7 +178,7 @@ export const CaseStudyPane: React.FC<CaseStudyPaneProps> = ({
         </div>
 
         {/* RIGHT PANE: Linked Questions */}
-        <div className="lg:col-span-6 flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-900 p-5 space-y-5">
+        <div data-tour="case-questions" className="lg:col-span-6 flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-900 p-5 space-y-5">
           <div className="space-y-4">
             {/* Question Number Pills */}
             <div className="flex flex-wrap items-center justify-between gap-2">

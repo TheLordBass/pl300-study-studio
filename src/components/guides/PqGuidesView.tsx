@@ -51,7 +51,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
 
       <div className="grid gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
         {/* Guide list */}
-        <nav aria-label="Guides" className="max-h-[340px] overflow-y-auto rounded-xl border border-slate-800 bg-slate-900 p-3 lg:max-h-[calc(100vh-160px)] lg:sticky lg:top-20">
+        <nav aria-label="Guides" data-tour="pq-guide-list" className="max-h-[340px] overflow-y-auto rounded-xl border border-slate-800 bg-slate-900 p-3 lg:max-h-[calc(100vh-160px)] lg:sticky lg:top-20">
           {GUIDE_CATEGORIES.map((c) => {
             const gs = filtered.filter((g) => g.category === c);
             if (!gs.length) return null;
@@ -89,7 +89,7 @@ export const PqGuidesView: React.FC<{ onOpenLab: () => void }> = ({ onOpenLab })
           </div>
 
           {/* Drawing */}
-          <div className="space-y-2">
+          <div data-tour="pq-guide-mock" className="space-y-2">
             {step.desktop ? (
               <DesktopMock highlight={step.desktop} badge={stepIdx + 1} />
             ) : (

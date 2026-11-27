@@ -9,13 +9,7 @@ import {
 import { PQ_SCENARIOS } from '../pqlab/scenarios';
 
 export const STORAGE_KEY = 'pl300_study_studio_progress_v1';
-export const GIST_CONFIG_KEY = 'pl300_gist_sync_config_v1';
-export const GIST_FILENAME = 'pl300-studio-progress.json';
 
-export interface GistSyncConfig {
-  token: string;
-  gistId: string;
-}
 
 export const INITIAL_PROGRESS: UserProgress = {
   completedSkills: [],
@@ -84,103 +78,6 @@ export function saveProgress(progress: UserProgress): void {
   } catch {
     // Ignore storage quota errors cleanly
   }
-}
-
-export function loadGistConfig(): GistSyncConfig {
-  try {
-    const raw = localStorage.getItem(GIST_CONFIG_KEY);
-    if (!raw) return { token: '', gistId: '' };
-    const parsed = JSON.parse(raw) as Partial<GistSyncConfig>;
-    return {
-      token: typeof parsed.token === 'string' ? parsed.token : '',
-      gistId: typeof parsed.gistId === 'string' ? parsed.gistId : '',
-    };
-  } catch {
-    return { token: '', gistId: '' };
-  }
-}
-
-export function saveGistConfig(config: GistSyncConfig): void {
-  try {
-    localStorage.setItem(GIST_CONFIG_KEY, JSON.stringify(config));
-  } catch {
-    // Ignore storage quota errors cleanly
-  }
-}
-
-export async function pushProgressToGist(
-  progress: UserProgress,
-  config: GistSyncConfig
-): Promise<string> {
-  const token = config.token.trim();
-  const gistId = config.gistId.trim();
-  if (!token) {
-    throw new Error('Enter a GitHub Personal Access Token (with "gist" scope) first.');
-  }
-
-  const endpoint = gistId
-    ? `https://api.github.com/gists/${encodeURIComponent(gistId)}`
-    : 'https://api.github.com/gists';
-
-  const res = await fetch(endpoint, {
-    method: gistId ? 'PATCH' : 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      description: 'PL-300 Studio Study Progress Backup',
-      public: false,
-      files: {
-        [GIST_FILENAME]: {
-          content: JSON.stringify(progress, null, 2),
-        },
-      },
-    }),
-  });
-
-  if (!res.ok) {
-    const detail = await res.text();
-    throw new Error(`GitHub Gist sync failed (${res.status}): ${detail.slice(0, 140)}`);
-  }
-
-  const data = (await res.json()) as { id: string };
-  return data.id;
-}
-
-export async function pullProgressFromGist(config: GistSyncConfig): Promise<UserProgress> {
-  const token = config.token.trim();
-  const gistId = config.gistId.trim();
-  if (!gistId) {
-    throw new Error('Enter your Gist ID to pull saved progress.');
-  }
-
-  const headers: Record<string, string> = {
-    Accept: 'application/vnd.github+json',
-  };
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, {
-    headers,
-  });
-
-  if (!res.ok) {
-    const detail = await res.text();
-    throw new Error(`Unable to fetch Gist (${res.status}): ${detail.slice(0, 140)}`);
-  }
-
-  const data = (await res.json()) as {
-    files?: Record<string, { content?: string }>;
-  };
-  const fileContent = data.files?.[GIST_FILENAME]?.content;
-  if (!fileContent) {
-    throw new Error(`Gist does not contain ${GIST_FILENAME}.`);
-  }
-
-  return parseProgressJson(fileContent);
 }
 
 export interface DomainAnalytics {
